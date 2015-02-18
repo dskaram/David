@@ -1,0 +1,10 @@
+<li><a href="#">></a></li>
+{{~it :value:index}}
+ 	<li>
+   {{? index !== it.length - 1}}
+      <a href="#">{{! value }}</a>
+   {{??}}
+      {{! value }}
+   {{?}}
+  </li>
+{{~}}

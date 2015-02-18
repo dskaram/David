@@ -1,0 +1,9 @@
+#quick-actions-placeholder {
+    position: fixed;
+    top: 0px;
+    right: calc(50% - 250px);
+    z-index: 20000;
+    padding: 10px;
+    background: #f5f5f5;
+    border: 1px solid #cacaca;
+}

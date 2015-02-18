@@ -1,0 +1,10 @@
+<div class="quick-actions-search-group">
+	<span class="quick-actions-search-group-addon quick-actions-provider-icon" id="basic-addon1"></span>
+	<input type="text" placeholder="Search" aria-describedby="basic-addon1">
+</div>
+<div class="quick-actions-content-popover">
+	<ol class="quick-actions-breadcrumb">
+		<li class="quick-actions-active">></li>
+	</ol>
+	<div class="quick-actions-list-view"></div>
+</div>

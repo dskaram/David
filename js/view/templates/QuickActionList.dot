@@ -1,0 +1,6 @@
+{{~it.entries :value:index}}
+	<li class="quick-actions-listEntry{{? index == it.selection }} quick-actions-selected{{?}}">
+		{{= value.label }}
+		{{? value.isProvider }}<span class="quick-actions-provider-icon"></span>{{?}}
+	</li>
+{{~}}
