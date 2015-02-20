@@ -24,6 +24,7 @@ require(
     "underscore",
     "backbone",
     "util/ScrollIntoView",
+    "util/Property",
     "providers/matching/MatchingProvider",
     "providers/ddg/DDGProvider",
     "providers/feedzilla/FeedZillaCategoryProvider",
@@ -32,6 +33,7 @@ require(
     "QuickAction"
   ],
   function($, _, B, SIV,
+          Property,
           MatchingProvider,
           DDGProvider,
           FeedZillaCategoryProvider,
@@ -40,11 +42,13 @@ require(
           QuickAction
   ) {
     $(function() {
+      var body= $("body");
       var quickActionsPlaceholder= $("<div id='quick-actions-placeholder'></div>");
-      $("body").append(quickActionsPlaceholder);
+      open= new Property(false);
       QuickAction
         .create(quickActionsPlaceholder)
         .baseUrl(chrome.extension.getURL(""))
+        .open(open)
         .provider(new MatchingProvider()
                         .add(new DDGProvider())
                         .add(new FeedZillaCategoryProvider())
@@ -52,7 +56,18 @@ require(
                         .add(new FolderProvider())
                   )
         .bind();
-        ;
+      open.changed(function(open) {
+        quickActionsPlaceholder.toggleClass("shown", open);
+      });
+      body.keyup(function(e) {
+          if (e.ctrlKey && e.which === 32) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            open.set(!open.get());
+          }
+      });
+      body.append(quickActionsPlaceholder);
     });
   }
 );

@@ -34,7 +34,7 @@ define([
     events: {
       "keydown .quick-actions-search-group input": "_onKeyDown",
       "keypress .quick-actions-search-group input": "_onKeyPress",
-      "mousemove .quick-actions-listEntries": "_onMouseMove",
+      "mousemove .quick-actions-listEntry": "_onMouseMove",
       "click": "focus",
       "click .quick-actions-listEntry": "_onClick",
       "click .quick-actions-breadcrumb li:not(.active)": "_targetBreadcrumb",
@@ -46,10 +46,14 @@ define([
 
       var self= this;
 
-      options.global.on("change:breadcrumb", function(model, breadcrumbs) {
+      options.viewModel.on("change:breadcrumb", function(model, breadcrumbs) {
         var node= self.$el.find(".quick-actions-breadcrumb");
         node.html(Breadcrumbs(breadcrumbs));
         node.children().last().addClass("quick-actions-active");
+      });
+
+      options.viewModel.on("change:open", function(model, open) {
+        self.$el.toggleClass("quick-actions-closed", !open);
       });
 
       this.layers.on("add", function(layer, collection, options) {
@@ -173,7 +177,9 @@ define([
 
   	_onMouseMove: function(e) {
   		Keys.stopEvent(e);
-  		this.trigger(this.SELECTION, $(e.target).closest(".quick-actions-listEntry").index());
+      if (e.target.tagName.toLowerCase() !== "li") return;
+
+  		this.trigger(this.SELECTION, $(e.target).index());
   	},
 
     _onKeyPress: function(e) {

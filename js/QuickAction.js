@@ -1,14 +1,18 @@
 define([
 	"jquery",
 	"backbone",
+	"util/Bindings",
 	"util/ListBindings",
-    "view/QuickActionView",
-    "view/Selection",
-    "view/Navigation"
+	"util/Property",
+  "view/QuickActionView",
+  "view/Selection",
+  "view/Navigation"
 ], function(
 	$,
 	Backbone,
+	Bindings,
 	ListBindings,
+	Property,
 	QuickActionView,
 	Selection,
 	Navigation
@@ -27,9 +31,10 @@ define([
 
 	var QuickAction= Backbone.Model.extend({
 
-		initialize: function(global, layers, view) {
-			this._bindViewEvents(global, layers, view);
-			this._baseUrl= "";
+		initialize: function(viewModel, layers, view) {
+			this._bindViewEvents(viewModel, layers, view);
+			this._baseUrl= "/";
+			this._viewModel= viewModel;
 
 			var self= this;
 			var providers= this._providers= new Backbone.Collection();
@@ -70,7 +75,7 @@ define([
 					result.push(providers.at(index).get("label"));
 				});
 
-				global.set("breadcrumb", result);
+				viewModel.set("breadcrumb", result);
 			};
 			providers.on("add", updateBreadcrumbs);
 			providers.on("remove", updateBreadcrumbs);
@@ -88,6 +93,11 @@ define([
 			return this;
 		},
 
+		open: function(open) {
+			this._open= open;
+			return this;
+		},
+
 		provider: function(defaultProvider) {
 			this._providers.add(defaultProvider);
 			return this;
@@ -95,9 +105,13 @@ define([
 
 		bind: function() {
 			if (this._providers.length === 0) throw new Error("Cannot bind without a default provider.");
+
+			if (this._open) {
+				Bindings.bind(this._open, this._viewModel, "open");
+			}
 		},
 
-		_bindViewEvents: function(global, layers, view) {
+		_bindViewEvents: function(viewModel, layers, view) {
 
 			view.on(view.SELECTION, _.bind(function(selection) {
 				var currentSelection= layers.active().get("selection");
@@ -160,19 +174,20 @@ define([
 				return this.last();
 			}
 		}))();
-		var global= new Backbone.Model({
-			breadcrumb: []
+		var viewModel= new Backbone.Model({
+			breadcrumb: [],
+			open: false
 		});
 		var view= new QuickActionView({
 			layers: layers,
-			global: global
+			viewModel: viewModel
 		});
 		view.render();
 
 		el.append(view.$el);
 		view.focus();
 
-		return new QuickAction(global, layers, view);
+		return new QuickAction(viewModel, layers, view);
 	};
 
 	return QuickAction;
