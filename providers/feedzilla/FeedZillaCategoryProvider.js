@@ -20,7 +20,7 @@ define([
   var categories= _.memoize(function() {
     var result= $.Deferred();
     var fzQuery= "//api.feedzilla.com/v1/categories.json";
-    $.get(fzQuery,function(j) {},'jsonp')
+    $.get(fzQuery,function(j) {},'json')
       .done(function(response) {
         result.resolve(new Backbone.Collection(
                             response

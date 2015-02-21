@@ -68,7 +68,7 @@ define([
 
       var ddgQuery= "//api.duckduckgo.com/?q=" + filter + "&format=json";
 
-      $.get(ddgQuery,function(j) {},'jsonp')
+      $.get(ddgQuery,function(j) {},'json')
         .done(function(response) {
           response= response.RelatedTopics;
           var direct= directResults(response);

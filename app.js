@@ -28,6 +28,7 @@ require(
     "util/ScrollIntoView",
     "util/Property",
     "util/Keys",
+    "providers/Provider",
     "providers/matching/MatchingProvider",
     "QuickAction",
     providersBaseUrl + "/ddg/DDGProvider.js",
@@ -37,12 +38,13 @@ require(
   function($, _, B, SIV,
           Property,
           Keys,
+          Provider,
           MatchingProvider,
           QuickAction,
           DDGProvider,
           FeedZillaCategoryProvider,
           NYTimesProvider
-  ) {
+) {
     $(function() {
       var body= $("body");
       var quickActionsPlaceholder= $("<div id='quick-actions-placeholder'></div>");
@@ -55,6 +57,7 @@ require(
                         .add(new DDGProvider())
                         .add(new FeedZillaCategoryProvider())
                         .add(new NYTimesProvider())
+                        .add(Provider.default())
                   )
         .bind();
       open.changed(function(open) {

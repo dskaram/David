@@ -24,7 +24,7 @@ define([
 			entries: new Backbone.Collection(),
 			selection: 0,
 			searchTerm: "",
-			providerIcon: "glyphicon-search",
+			providerIcon: "",
 			searchAdapter: _.identity
 		}
 	});

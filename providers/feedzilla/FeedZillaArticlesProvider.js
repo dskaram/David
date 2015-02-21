@@ -27,7 +27,7 @@ define([
                       "//api.feedzilla.com/v1/categories/" + category + "/articles.json" :
                       "//api.feedzilla.com/v1/categories/" + category + "/articles/search.json?q=" + filter;
 
-      $.get(fzQuery,function(j) {},'jsonp')
+      $.get(fzQuery,function(j) {},'json')
         .done(function(response) {
           result.resolve(new Backbone.Collection(
                               _.map(response.articles, function(result) {

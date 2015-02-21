@@ -1,11 +1,15 @@
 define([
+	"jquery",
 	"underscore",
+	"backbone",
 	"providers/ProviderEntry"
 ], function(
+	$,
 	_,
+	Backbone,
 	ProviderEntry
 ) {
-  return ProviderEntry.extend({
+  var Provider= ProviderEntry.extend({
 
   	isProvider: function() {
   		return true;
@@ -24,12 +28,30 @@ define([
 		},
 
 		icon: function() {
-			return "glyphicon-search";
+			return "";
 		},
 
     retrieve: function(filter) {
     	throw new Error("Must override retrieve");
     }
-
   });
+
+
+	var DefaultProvider= Provider.extend({
+		accepts: function(filter) {
+			return true;
+		},
+
+		retrieve: function(filter) {
+			return $.Deferred().resolve(new Backbone.Collection());
+		}
+	});
+
+
+	Provider.default= function() {
+		return new DefaultProvider();
+	}
+
+	return Provider;
+
 });
