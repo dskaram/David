@@ -31,6 +31,7 @@ require(
     "providers/Provider",
     "providers/matching/MatchingProvider",
     "QuickAction",
+    providersBaseUrl + "/chrome/ChromeProvider.js",
     providersBaseUrl + "/ddg/DDGProvider.js",
     providersBaseUrl + "/feedzilla/FeedZillaCategoryProvider.js",
     providersBaseUrl + "/nytimes/NYTimesProvider.js"
@@ -41,28 +42,33 @@ require(
           Provider,
           MatchingProvider,
           QuickAction,
+          ChromeProvider,
           DDGProvider,
           FeedZillaCategoryProvider,
           NYTimesProvider
 ) {
     $(function() {
+
       var body= $("body");
+      var matchingProvider= new MatchingProvider();
       var quickActionsPlaceholder= $("<div id='quick-actions-placeholder'></div>");
       open= new Property(false);
       QuickAction
         .create(quickActionsPlaceholder)
         .baseUrl(chrome.extension.getURL(""))
         .open(open)
-        .provider(new MatchingProvider()
+        .provider(matchingProvider
                         .add(new DDGProvider())
                         .add(new FeedZillaCategoryProvider())
                         .add(new NYTimesProvider())
-                        .add(Provider.default())
+                        .add(new ChromeProvider())
                   )
         .bind();
+
       open.changed(function(open) {
         quickActionsPlaceholder.toggleClass("shown", open);
       });
+
       body.keyup(function(e) {
           if (e.ctrlKey && e.which === Keys.SPACE) {
             Keys.stopEvent(e);
@@ -72,7 +78,22 @@ require(
             open.set(false);
           }
       });
+
       body.append(quickActionsPlaceholder);
+
+      var port = chrome.runtime.connect({name: "providers-channel"});
+      port.postMessage({type : "req-providers-bookmarks"});
+      port.onMessage.addListener(function() {
+        console.log(arguments)
+      });
+
+      window.addEventListener("message", function(event) {
+        if (event.source !== window) return;
+
+        if (event.data.type && (event.data.type == "ADD_PROVIDER")) {
+          matchingProvider.add(event.provider);
+        }
+      }, false);
     });
   }
 );

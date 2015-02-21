@@ -5,23 +5,23 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "css": ["popup.css", "css/style.css"],
-      "js": ["js/lib/require.js", "js/lib/require-cs.js", "app.js"]
+      "css": ["css/style.css"],
+      "js": ["js/lib/require.js", "js/lib/require-cs.js", "app-cs.js"]
     }
   ],
   "permissions": [
     "http://*/",
-    "https://*/"
+    "https://*/",
+    "bookmarks"
   ],
   "web_accessible_resources": [
     "js/*",
     "providers/*",
     "css/*"
  ],
- "browser_action": {
-    "default_title": "Grab the Internet",
-    "default_icon": "clock.png",
-    "default_popup": "popup.html"
+ "background": {
+   "scripts": ["app-ep.js"],
+   "persistent": false
   },
   "manifest_version": 2
 }
