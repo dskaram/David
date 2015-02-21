@@ -19,6 +19,8 @@ require.config({
   }
 });
 
+var providersBaseUrl= chrome.extension.getURL("/providers");
+
 require(
   ["jquery",
     "underscore",
@@ -27,21 +29,19 @@ require(
     "util/Property",
     "util/Keys",
     "providers/matching/MatchingProvider",
-    "providers/ddg/DDGProvider",
-    "providers/feedzilla/FeedZillaCategoryProvider",
-    "providers/fs/FolderProvider",
-    "providers/nytimes/NYTimesProvider",
-    "QuickAction"
+    "QuickAction",
+    providersBaseUrl + "/ddg/DDGProvider.js",
+    providersBaseUrl + "/feedzilla/FeedZillaCategoryProvider.js",
+    providersBaseUrl + "/nytimes/NYTimesProvider.js"
   ],
   function($, _, B, SIV,
           Property,
           Keys,
           MatchingProvider,
+          QuickAction,
           DDGProvider,
           FeedZillaCategoryProvider,
-          FolderProvider,
-          NYTimesProvider,
-          QuickAction
+          NYTimesProvider
   ) {
     $(function() {
       var body= $("body");
@@ -55,7 +55,6 @@ require(
                         .add(new DDGProvider())
                         .add(new FeedZillaCategoryProvider())
                         .add(new NYTimesProvider())
-                        .add(new FolderProvider())
                   )
         .bind();
       open.changed(function(open) {

@@ -3,7 +3,7 @@ define([
   "backbone",
   "providers/Provider",
 	"providers/ProviderEntry",
-  "providers/feedzilla/FeedZillaArticlesProvider"
+  chrome.extension.getURL("/providers") + "/feedzilla/FeedZillaArticlesProvider.js"
 ], function(
   _,
   Backbone,
@@ -49,7 +49,7 @@ define([
     },
 
     icon: function() {
-      return "js/providers/feedzilla/feedzilla.png";
+      return "providers/feedzilla/feedzilla.png";
     },
 
     retrieve: function(filter) {

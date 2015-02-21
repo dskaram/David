@@ -17,7 +17,7 @@ define([
     },
 
     icon: function() {
-      return "js/providers/feedzilla/feedzilla.png";
+      return "providers/feedzilla/feedzilla.png";
     },
 
     retrieve: _.memoize(function(filter) {

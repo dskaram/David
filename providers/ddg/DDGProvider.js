@@ -1,7 +1,7 @@
 define([
   "underscore",
   "backbone",
-  "providers/ddg/DDGCategoryProvider",
+  chrome.extension.getURL("/providers") + "/ddg/DDGCategoryProvider.js",
   "providers/Provider",
 	"providers/ProviderEntry"
 ], function(
@@ -51,7 +51,7 @@ define([
     },
 
     icon: function() {
-      return "js/providers/ddg/duckduckgo.png";
+      return "providers/ddg/duckduckgo.png";
     },
 
     accepts: function(filter) {
