@@ -25,6 +25,7 @@ require(
     "backbone",
     "util/ScrollIntoView",
     "util/Property",
+    "util/Keys",
     "providers/matching/MatchingProvider",
     "providers/ddg/DDGProvider",
     "providers/feedzilla/FeedZillaCategoryProvider",
@@ -34,6 +35,7 @@ require(
   ],
   function($, _, B, SIV,
           Property,
+          Keys,
           MatchingProvider,
           DDGProvider,
           FeedZillaCategoryProvider,
@@ -60,11 +62,12 @@ require(
         quickActionsPlaceholder.toggleClass("shown", open);
       });
       body.keyup(function(e) {
-          if (e.ctrlKey && e.which === 32) {
-            e.preventDefault();
-            e.stopPropagation();
-
+          if (e.ctrlKey && e.which === Keys.SPACE) {
+            Keys.stopEvent(e);
             open.set(!open.get());
+          } else if (e.which === Keys.ESCAPE) {
+            Keys.stopEvent(e);
+            open.set(false);
           }
       });
       body.append(quickActionsPlaceholder);

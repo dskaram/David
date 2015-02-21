@@ -1,7 +1,8 @@
 define([
   "underscore",
   "backbone",
-  "view/Keys",
+  "util/Bindings",
+  "util/Keys",
   "view/Matcher",
   "view/Selection",
   "view/Navigation",
@@ -11,6 +12,7 @@ define([
   ], function(
     _,
     Backbone,
+    Bindings,
     Keys,
     Matcher,
     Selection,
@@ -43,17 +45,36 @@ define([
 
     initialize: function(options) {
       this.layers= options.layers;
+      this.viewModel= options.viewModel;
+    },
 
+    render: function() {
+      this.$el.html(QuickActionViewTemplate({}));
+
+      this.inputBox= this.$el.find(".quick-actions-search-group input");
+      this.providerPlaceholder= this.$el.find(".quick-actions-search-group .quick-actions-search-group-addon");
+      this.listView= this.$el.find(".quick-actions-list-view");
+
+      this._bindViewModel();
+      return this;
+    },
+
+    focus: function() {
+      this.inputBox.focus();
+    },
+
+    _bindViewModel: function() {
       var self= this;
 
-      options.viewModel.on("change:breadcrumb", function(model, breadcrumbs) {
+      Bindings.bind(this.viewModel, "breadcrumb", function(model, breadcrumbs) {
         var node= self.$el.find(".quick-actions-breadcrumb");
         node.html(Breadcrumbs(breadcrumbs));
         node.children().last().addClass("quick-actions-active");
       });
 
-      options.viewModel.on("change:open", function(model, open) {
+      Bindings.bind(this.viewModel, "open", function(model, open) {
         self.$el.toggleClass("quick-actions-closed", !open);
+        if (open) self.focus();
       });
 
       this.layers.on("add", function(layer, collection, options) {
@@ -116,20 +137,6 @@ define([
         removed.css("transform", "translateX(" + 100 + "%)");
           // destroy all listeners
       });
-
-    },
-
-    render: function() {
-      this.$el.html(QuickActionViewTemplate({}));
-
-      this.inputBox= this.$el.find(".quick-actions-search-group input");
-      this.providerPlaceholder= this.$el.find(".quick-actions-search-group .quick-actions-search-group-addon");
-      this.listView= this.$el.find(".quick-actions-list-view");
-      return this;
-    },
-
-    focus: function() {
-      this.inputBox.focus();
     },
 
     _onKeyDown: function(e) {
