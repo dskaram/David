@@ -52,6 +52,7 @@ require(
       var body= $("body");
       var matchingProvider= new MatchingProvider();
       var quickActionsPlaceholder= $("<div id='quick-actions-placeholder'></div>");
+      var quickActionsMarker= $("<div id='quickactions-marker'>↓</div>");
       open= new Property(false);
       QuickAction
         .create(quickActionsPlaceholder)
@@ -66,7 +67,7 @@ require(
         .bind();
 
       open.changed(function(open) {
-        quickActionsPlaceholder.toggleClass("shown", open);
+        quickActionsPlaceholder.toggleClass("quickactions-placeholder-shown", open);
       });
 
       var port = chrome.runtime.connect({ name: "commands-channel" });
@@ -85,7 +86,15 @@ require(
           }
       });
 
+      body.mousemove(_.throttle(function(e) {
+        quickActionsPlaceholder.toggleClass("quickactions-marker-shown", !open.get() && e.clientY < 100);
+      }, 350));
+      quickActionsMarker.click(function() {
+        open.set(true);
+      });
+
       body.append(quickActionsPlaceholder);
+      quickActionsPlaceholder.append(quickActionsMarker);
 
       window.addEventListener("message", function(event) {
         if (event.source !== window) return;
