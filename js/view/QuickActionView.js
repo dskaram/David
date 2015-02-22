@@ -87,9 +87,7 @@ define([
         });
 
         layer.on("change:providerIcon", function(model, providerIcon) {
-          if (providerIcon) {
-            self.providerPlaceholder.css("background-image", "url(" + providerIcon + ")");
-          }
+          self.providerPlaceholder.css("background-image", "url(" + providerIcon + ")");
         });
 
         layer.on("change:shown", function(model, shown) {
@@ -174,22 +172,22 @@ define([
       }
     },
 
-  	_onClick: function(e) {
+    _onClick: function(e) {
       // do not stop propagation. parent needs to refocus
-  		this.trigger(this.NAVIGATION, Navigation.EXECUTE);
-  	},
+      this.trigger(this.NAVIGATION, Navigation.EXECUTE);
+    },
 
     _targetBreadcrumb: function(e) {
       // do not stop propagation. parent needs to refocus
       this.layers.length > 1 && this.trigger(this.NAVIGATION, this.layers.length - $(e.target).parent().index() - 1);
     },
 
-  	_onMouseMove: function(e) {
-  		Keys.stopEvent(e);
+    _onMouseMove: function(e) {
+      Keys.stopEvent(e);
       if (e.target.tagName.toLowerCase() !== "li") return;
 
-  		this.trigger(this.SELECTION, $(e.target).index());
-  	},
+      this.trigger(this.SELECTION, $(e.target).index());
+    },
 
     _onKeyPress: function(e) {
       Keys.stopEvent(e);

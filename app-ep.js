@@ -1,6 +1,6 @@
 chrome.runtime.onConnect.addListener(function(port) {
   if(port.name !== "providers-channel") {
-    throw new Error("Unknown channel name");
+    return;
   }
 
   var handlers= {};
@@ -27,5 +27,22 @@ chrome.runtime.onConnect.addListener(function(port) {
 
   port.onMessage.addListener(function(req) {
     handlers[req.reqType](req);
+  });
+});
+
+
+
+chrome.runtime.onConnect.addListener(function(port) {
+  if(port.name !== "commands-channel") {
+    return;
+  }
+
+  var TOGGLE_REQ= "toggle-open";
+  chrome.commands.onCommand.addListener(function(command) {
+    if (command === TOGGLE_REQ) {
+      port.postMessage({
+        reqType: TOGGLE_REQ
+      });
+    }
   });
 });

@@ -23,5 +23,14 @@
    "scripts": ["app-ep.js"],
    "persistent": false
   },
+  "commands": {
+        "toggle-open": {
+          "suggested_key": {
+            "default": "Ctrl+M",
+            "mac": "Command+M"
+          },
+          "description": "Toggle QuickActions"
+        }
+  },
   "manifest_version": 2
 }

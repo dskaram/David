@@ -69,11 +69,15 @@ require(
         quickActionsPlaceholder.toggleClass("shown", open);
       });
 
-      body.keyup(function(e) {
-          if (e.ctrlKey && e.which === Keys.SPACE) {
-            Keys.stopEvent(e);
-            open.set(!open.get());
-          } else if (e.which === Keys.ESCAPE) {
+
+      var port = chrome.runtime.connect({ name: "commands-channel" });
+      var TOGGLE_REQ= "toggle-open";
+      port.onMessage.addListener(function(req) {
+        open.set(!open.get());
+      });
+
+      quickActionsPlaceholder.find("input").keyup(function(e) {
+          if (e.which === Keys.ESCAPE) {
             Keys.stopEvent(e);
             open.set(false);
           }
