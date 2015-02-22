@@ -12,7 +12,9 @@
   "permissions": [
     "http://*/",
     "https://*/",
-    "bookmarks"
+    "bookmarks",
+    "downloads",
+    "downloads.open"
   ],
   "web_accessible_resources": [
     "js/*",

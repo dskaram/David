@@ -25,6 +25,21 @@ chrome.runtime.onConnect.addListener(function(port) {
     });
   };
 
+  var DOWNLOADS_SEARCH= "search-providers-downloads";
+  handlers[DOWNLOADS_SEARCH]= function(req) {
+    chrome.downloads.search(req.query, function(downloads) {
+      port.postMessage({
+        reqId: req.reqId,
+        downloads: downloads
+      });
+    });
+  };
+
+  var DOWNLOAD_OPEN= "open-providers-download";
+  handlers[DOWNLOAD_OPEN]= function(req) {
+    chrome.downloads.open(req.downloadId);
+  };
+
   port.onMessage.addListener(function(req) {
     handlers[req.reqType](req);
   });
