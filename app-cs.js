@@ -86,11 +86,18 @@ require(
           }
       });
 
+      var smoothOut= false;
       body.mousemove(_.throttle(function(e) {
-        quickActionsPlaceholder.toggleClass("quickactions-marker-shown", !open.get() && e.clientY < 100);
+        if (smoothOut) return;
+        quickActionsPlaceholder.toggleClass("quickactions-marker-shown", !open.get() && e.clientY < 75);
       }, 350));
       quickActionsMarker.click(function() {
-        open.set(true);
+        smoothOut= true;
+        quickActionsPlaceholder.removeClass("quickactions-marker-shown");
+        setTimeout(function() {
+          open.set(true);
+          smoothOut= false;
+        }, 100);
       });
 
       body.append(quickActionsPlaceholder);

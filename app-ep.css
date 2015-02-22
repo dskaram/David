@@ -34,7 +34,7 @@
   border-radius: 50%;
   background: #f5f5f5;
   border: 1px solid #cacaca;
-  transition: all 0.35s ease;
+  transition: opacity 0.2s ease-out;
 }
 
 .quickactions-placeholder-shown #quickactions-marker {
