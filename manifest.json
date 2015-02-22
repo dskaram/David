@@ -5,7 +5,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "css": ["css/style.css"],
+      "css": ["app-ep.css", "css/style.css"],
       "js": ["js/lib/require.js", "js/lib/require-cs.js", "app-cs.js"]
     }
   ],
