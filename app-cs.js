@@ -81,12 +81,6 @@ require(
 
       body.append(quickActionsPlaceholder);
 
-      var port = chrome.runtime.connect({name: "providers-channel"});
-      port.postMessage({type : "req-providers-bookmarks"});
-      port.onMessage.addListener(function() {
-        console.log(arguments)
-      });
-
       window.addEventListener("message", function(event) {
         if (event.source !== window) return;
 
