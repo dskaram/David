@@ -25,6 +25,16 @@ chrome.runtime.onConnect.addListener(function(port) {
     });
   };
 
+  var TOP_SITES_REQ= "req-providers-topsites";
+  handlers[TOP_SITES_REQ]= function(req) {
+    chrome.topSites.get(function(topSites) {
+      port.postMessage({
+        reqId: req.reqId,
+        topSites: topSites
+      });
+    });
+  };
+
   var HISTORY_SEARCH= "search-providers-history";
   handlers[HISTORY_SEARCH]= function(req) {
     chrome.history.search(req.query, function(historyEntries) {

@@ -53,6 +53,25 @@ define([
     }
   };
 
+  var TOP_SITES_REQ= "req-providers-topsites";
+  ChromeWrapper.prototype.topSites= {
+    get: function() {
+      var result= $.Deferred();
+      var requestId= _.uniqueId(TOP_SITES_REQ);
+      pendingRequests[requestId]= {
+        respKey: "topSites",
+        deferred: result
+      };
+
+      port.postMessage({
+        reqId: requestId,
+        reqType: TOP_SITES_REQ
+      });
+
+      return result;
+    }
+  };
+
   var HISTORY_SEARCH= "search-providers-history";
   ChromeWrapper.prototype.history= {
     search: function(query) {

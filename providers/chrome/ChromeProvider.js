@@ -5,6 +5,7 @@ define([
   chrome.extension.getURL("/providers") + "/chrome/ChromeWrapper.js",
   chrome.extension.getURL("/providers") + "/chrome/bookmarks/BookmarksProvider.js",
   chrome.extension.getURL("/providers") + "/chrome/history/HistoryProvider.js",
+  chrome.extension.getURL("/providers") + "/chrome/topsites/TopSitesProvider.js",
   chrome.extension.getURL("/providers") + "/chrome/downloads/DownloadsProvider.js"
 ], function(
   _,
@@ -13,6 +14,7 @@ define([
   ChromeWrapper,
   BookmarksProvider,
   HistoryProvider,
+  TopSitesProvider,
   DownloadsProvider
 ) {
 
@@ -35,8 +37,11 @@ define([
                 .resolve(new Backbone.Collection([
                     new BookmarksProvider({}, { wrapper: this._wrapper }),
                     new HistoryProvider(this._wrapper),
+                    new TopSitesProvider(this._wrapper),
                     new DownloadsProvider(this._wrapper)
-                  ]));
+                  ].filter(function(provider) {
+                    return provider.get("label").toLowerCase().indexOf(filter.toLowerCase()) !== -1;
+                  })));
     }
   });
 });

@@ -14,6 +14,7 @@
     "https://*/",
     "bookmarks",
     "history",
+    "topSites",
     "downloads",
     "downloads.open"
   ],
