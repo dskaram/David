@@ -25,6 +25,16 @@ chrome.runtime.onConnect.addListener(function(port) {
     });
   };
 
+  var HISTORY_SEARCH= "search-providers-history";
+  handlers[HISTORY_SEARCH]= function(req) {
+    chrome.history.search(req.query, function(historyEntries) {
+      port.postMessage({
+        reqId: req.reqId,
+        historyEntries: historyEntries
+      });
+    });
+  };
+
   var DOWNLOADS_SEARCH= "search-providers-downloads";
   handlers[DOWNLOADS_SEARCH]= function(req) {
     chrome.downloads.search(req.query, function(downloads) {

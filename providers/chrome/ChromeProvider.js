@@ -4,6 +4,7 @@ define([
   "providers/Provider",
   chrome.extension.getURL("/providers") + "/chrome/ChromeWrapper.js",
   chrome.extension.getURL("/providers") + "/chrome/bookmarks/BookmarksProvider.js",
+  chrome.extension.getURL("/providers") + "/chrome/history/HistoryProvider.js",
   chrome.extension.getURL("/providers") + "/chrome/downloads/DownloadsProvider.js"
 ], function(
   _,
@@ -11,6 +12,7 @@ define([
   Provider,
   ChromeWrapper,
   BookmarksProvider,
+  HistoryProvider,
   DownloadsProvider
 ) {
 
@@ -32,6 +34,7 @@ define([
       return $.Deferred()
                 .resolve(new Backbone.Collection([
                     new BookmarksProvider({}, { wrapper: this._wrapper }),
+                    new HistoryProvider(this._wrapper),
                     new DownloadsProvider(this._wrapper)
                   ]));
     }

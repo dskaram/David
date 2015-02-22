@@ -53,6 +53,26 @@ define([
     }
   };
 
+  var HISTORY_SEARCH= "search-providers-history";
+  ChromeWrapper.prototype.history= {
+    search: function(query) {
+      var result= $.Deferred();
+      var requestId= _.uniqueId(HISTORY_SEARCH);
+      pendingRequests[requestId]= {
+        respKey: "historyEntries",
+        deferred: result
+      };
+
+      port.postMessage({
+        reqId: requestId,
+        reqType: HISTORY_SEARCH,
+        query: query
+      });
+
+      return result;
+    }
+  };
+
   var DOWNLOAD_OPEN= "open-providers-download";
   var DOWNLOADS_SEARCH= "search-providers-downloads";
   ChromeWrapper.prototype.downloads= {

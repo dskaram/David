@@ -13,6 +13,7 @@
     "http://*/",
     "https://*/",
     "bookmarks",
+    "history",
     "downloads",
     "downloads.open"
   ],
