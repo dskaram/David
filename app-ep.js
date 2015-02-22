@@ -1,18 +1,31 @@
 chrome.runtime.onConnect.addListener(function(port) {
-  var BOOKMARKS_REQ= "req-providers-bookmarks";
-
   if(port.name !== "providers-channel") {
     throw new Error("Unknown channel name");
   }
 
-  port.onMessage.addListener(function(req) {
-    if (req.reqType === BOOKMARKS_REQ) {
-      chrome.bookmarks.getChildren(req.bookmarksId, function(bookmarks) {
-        port.postMessage({
-          reqId: req.reqId,
-          bookmarks: bookmarks
-        });
+  var handlers= {};
+
+  var BOOKMARKS_REQ= "req-providers-bookmarks";
+  handlers[BOOKMARKS_REQ]= function(req) {
+    chrome.bookmarks.getChildren(req.bookmarksId, function(bookmarks) {
+      port.postMessage({
+        reqId: req.reqId,
+        bookmarks: bookmarks
       });
-    }
+    });
+  };
+
+  var BOOKMARKS_SEARCH= "search-providers-bookmarks";
+  handlers[BOOKMARKS_SEARCH]= function(req) {
+    chrome.bookmarks.search(req.searchTerm, function(bookmarks) {
+      port.postMessage({
+        reqId: req.reqId,
+        bookmarks: bookmarks
+      });
+    });
+  };
+
+  port.onMessage.addListener(function(req) {
+    handlers[req.reqType](req);
   });
 });
