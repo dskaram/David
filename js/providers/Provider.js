@@ -9,11 +9,11 @@ define([
 	Backbone,
 	ProviderEntry
 ) {
-  var Provider= ProviderEntry.extend({
+	var Provider= ProviderEntry.extend({
 
-  	isProvider: function() {
-  		return true;
-  	},
+		isProvider: function() {
+			return true;
+		},
 
 		adapter: function() {
 			return _.identity;
@@ -31,10 +31,10 @@ define([
 			return "";
 		},
 
-    retrieve: function(filter) {
-    	throw new Error("Must override retrieve");
-    }
-  });
+		retrieve: function(filter) {
+			throw new Error("Must override retrieve");
+		}
+	});
 
 
 	var DefaultProvider= Provider.extend({

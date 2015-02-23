@@ -56,6 +56,24 @@ define([
       this.listView= this.$el.find(".quick-actions-list-view");
 
       this._bindViewModel();
+
+      this.on(this.NAVIGATION, _.bind(function(direction) {
+        if (direction === Navigation.EXECUTE) {
+          var activeLayer= this.layers.active();
+          var currentSelection= activeLayer.get("selection");
+          var entry= activeLayer.get("entries").at(currentSelection);
+
+          if (!entry.isProvider()) {
+            var selectedNode= this.listView.children().eq(this.layers.length - 1).children().eq(currentSelection);
+            selectedNode.addClass("quickactions-tap-effect");
+            setTimeout(function() {
+              selectedNode.removeClass("quickactions-tap-effect");
+            }, 100);
+          }
+        }
+      }, this));
+
+
       return this;
     },
 
@@ -172,22 +190,22 @@ define([
       }
     },
 
-    _onClick: function(e) {
+  	_onClick: function(e) {
       // do not stop propagation. parent needs to refocus
-      this.trigger(this.NAVIGATION, Navigation.EXECUTE);
-    },
+  		this.trigger(this.NAVIGATION, Navigation.EXECUTE);
+  	},
 
     _targetBreadcrumb: function(e) {
       // do not stop propagation. parent needs to refocus
       this.layers.length > 1 && this.trigger(this.NAVIGATION, this.layers.length - $(e.target).parent().index() - 1);
     },
 
-    _onMouseMove: function(e) {
-      Keys.stopEvent(e);
+  	_onMouseMove: function(e) {
+  		Keys.stopEvent(e);
       if (e.target.tagName.toLowerCase() !== "li") return;
 
-      this.trigger(this.SELECTION, $(e.target).index());
-    },
+  		this.trigger(this.SELECTION, $(e.target).index());
+  	},
 
     _onKeyPress: function(e) {
       Keys.stopEvent(e);

@@ -4,9 +4,9 @@ define([
 	"util/Bindings",
 	"util/ListBindings",
 	"util/Property",
-	"view/QuickActionView",
-	"view/Selection",
-	"view/Navigation"
+  "view/QuickActionView",
+  "view/Selection",
+  "view/Navigation"
 ], function(
 	$,
 	Backbone,
@@ -120,15 +120,15 @@ define([
 				var numEntries= layers.active().get("entries").length;
 
 				switch(selection) {
-							case Selection.DOWN:
-								layers.active().set("selection", currentSelection === numEntries - 1 ? 0 : currentSelection + 1);
+			        case Selection.DOWN:
+			        	layers.active().set("selection", currentSelection === numEntries - 1 ? 0 : currentSelection + 1);
 						break;
-							case Selection.UP:
-								layers.active().set("selection", currentSelection === 0 ? numEntries - 1 : currentSelection - 1);
-										break;
+			        case Selection.UP:
+			         	layers.active().set("selection", currentSelection === 0 ? numEntries - 1 : currentSelection - 1);
+              			break;
 					default:
-								layers.active().set("selection", typeof selection === "number" ? selection : 0);
-								}
+			         	layers.active().set("selection", typeof selection === "number" ? selection : 0);
+              	}
 
 			}, this));
 
@@ -138,21 +138,21 @@ define([
 				var entry= entries.at(currentSelection);
 
 				switch(direction) {
-							case Navigation.EXECUTE:
-								if (entry.isProvider()) {
-									this._providers.add(entry);
-								} else {
+			         case Navigation.EXECUTE:
+			         	if (entry.isProvider()) {
+				         	this._providers.add(entry);
+			         	} else {
 									entry.execute();
 								}
-								break;
-							case Navigation.ROLLBACK:
-								direction= 1;
+          			break;
+			         case Navigation.ROLLBACK:
+			         	direction= 1;
 					default:
-								while (direction > 0 && this._providers.length > 1) {
-									this._providers.remove(this._providers.last());
-									direction--;
-								}
-				}
+			         	while (direction > 0 && this._providers.length > 1) {
+				         	this._providers.remove(this._providers.last());
+				         	direction--;
+				        }
+        }
 			}, this));
 
 			view.on(view.KEY, _.bind(function(key) {

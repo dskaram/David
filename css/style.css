@@ -60,7 +60,13 @@
 .quick-actions-list-view .quick-actions-listEntries .quick-actions-listEntry.quick-actions-selected {
   background: #3b88c3;
   color: white;
+  transition: opacity 0.2s ease-out;
 }
+
+.quick-actions-list-view .quick-actions-listEntries .quick-actions-listEntry.quick-actions-selected.quickactions-tap-effect {
+  opacity: 0.8;
+}
+
 
 .quick-actions-list-view .quick-actions-listEntries .quick-actions-listEntry .quick-actions-matched {
   font-weight: bold;
