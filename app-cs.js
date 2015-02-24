@@ -32,6 +32,7 @@ require(
     "QuickAction",
     providersBaseUrl + "/chrome/ChromeProvider.js",
     providersBaseUrl + "/ddg/DDGProvider.js",
+    providersBaseUrl + "/mail/SharePageProvider.js",
     providersBaseUrl + "/feedzilla/FeedZillaCategoryProvider.js",
     providersBaseUrl + "/nytimes/NYTimesProvider.js"
   ],
@@ -43,6 +44,7 @@ require(
           QuickAction,
           ChromeProvider,
           DDGProvider,
+          SharePageProvider,
           FeedZillaCategoryProvider,
           NYTimesProvider
 ) {
@@ -60,6 +62,7 @@ require(
         .provider(matchingProvider
                         .add(new DDGProvider())
                         .add(new FeedZillaCategoryProvider())
+                        .add(new SharePageProvider())
                         .add(new NYTimesProvider())
                         .add(new ChromeProvider())
                   )
