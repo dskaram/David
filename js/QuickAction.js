@@ -34,6 +34,7 @@ define([
 		initialize: function(viewModel, layers, view) {
 			this._bindViewEvents(viewModel, layers, view);
 			this._baseUrl= "/";
+			this._open= new Property(viewModel.get("open"));
 			this._viewModel= viewModel;
 
 			var self= this;
@@ -108,9 +109,7 @@ define([
 		bind: function() {
 			if (this._providers.length === 0) throw new Error("Cannot bind without a default provider.");
 
-			if (this._open) {
-				Bindings.bind(this._open, this._viewModel, "open");
-			}
+			Bindings.bind(this._open, this._viewModel, "open");
 		},
 
 		_bindViewEvents: function(viewModel, layers, view) {
@@ -164,6 +163,10 @@ define([
 				if (prev) {
 					layers.active().set("searchTerm", prev.substr(0, prev.length - 1));
 				}
+			}, this));
+
+			view.on(view.BLURRED, _.bind(function() {
+				this._open.set(false);
 			}, this));
 		}
 	});

@@ -25,7 +25,6 @@ require(
   ["jquery",
     "underscore",
     "backbone",
-    "util/ScrollIntoView",
     "util/Property",
     "util/Keys",
     "providers/Provider",
@@ -36,7 +35,7 @@ require(
     providersBaseUrl + "/feedzilla/FeedZillaCategoryProvider.js",
     providersBaseUrl + "/nytimes/NYTimesProvider.js"
   ],
-  function($, _, B, SIV,
+  function($, _, B,
           Property,
           Keys,
           Provider,

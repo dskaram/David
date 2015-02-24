@@ -27,6 +27,7 @@ define([
   return Backbone.View.extend({
 
     KEY: "key-pressed",
+    BLURRED: "view-blurred",
     BACKSPACE: "backspace-pressed",
     SELECTION: "selection-pressed",
     NAVIGATION: "navigation-pressed",
@@ -34,10 +35,10 @@ define([
     className: "quick-actions-main-container",
 
     events: {
+      "blur .quick-actions-search-group input": "_onBlur",
       "keydown .quick-actions-search-group input": "_onKeyDown",
       "keypress .quick-actions-search-group input": "_onKeyPress",
       "mousemove .quick-actions-listEntry": "_onMouseMove",
-      "click": "focus",
       "click .quick-actions-listEntry": "_onClick",
       "click .quick-actions-breadcrumb li:not(.active)": "_targetBreadcrumb",
       "click .quick-actions-breadcrumb .initial": "_targetBreadcrumb"
@@ -119,7 +120,7 @@ define([
 
           entries.removeClass("quick-actions-selected");
           selectedElement.addClass("quick-actions-selected");
-          selectedElement.scrollIntoViewIfNeeded();
+          self._showElement(selectedElement);
         });
 
         layer.on("change:entries", function(model, entries) {
@@ -157,8 +158,37 @@ define([
       });
     },
 
+    _showElement: document.createElement('div').scrollIntoViewIfNeeded ?
+      function($el) {
+        $el[0].scrollIntoViewIfNeeded();
+      } :
+      function($el) {
+        var elTop, elBottom, menuScrollTop, menuHeight;
+        var $menu= $el.parent();
+
+        elTop = $el.position().top;
+        elBottom = elTop + $el.outerHeight(true);
+        menuScrollTop = $menu.scrollTop();
+        menuHeight = $menu.height() +
+          parseInt($menu.css('paddingTop'), 10) +
+          parseInt($menu.css('paddingBottom'), 10);
+
+        if (elTop < 0) {
+          $menu.scrollTop(menuScrollTop + elTop);
+        }
+
+        else if (menuHeight < elBottom) {
+          $menu.scrollTop(menuScrollTop + (elBottom - menuHeight));
+        }
+    },
+
     _onKeyDown: function(e) {
       switch(e.which) {
+          case Keys.SPACE:
+              if (this.inputBox.val().trim() === "") {
+                Keys.stopEvent(e);
+              }
+              break;
           case Keys.BACKSPACE:
               Keys.stopEvent(e);
               this.trigger(this.BACKSPACE);
@@ -190,13 +220,21 @@ define([
       }
     },
 
+    _onBlur: function(e) {
+      if ($('.quick-actions-main-container:hover').length !== 0) {
+        this.focus();
+      } else {
+        this.trigger(this.BLURRED);
+      }
+    },
+
   	_onClick: function(e) {
-      // do not stop propagation. parent needs to refocus
+      Keys.stopEvent(e);
   		this.trigger(this.NAVIGATION, Navigation.EXECUTE);
   	},
 
     _targetBreadcrumb: function(e) {
-      // do not stop propagation. parent needs to refocus
+      Keys.stopEvent(e);
       this.layers.length > 1 && this.trigger(this.NAVIGATION, this.layers.length - $(e.target).parent().index() - 1);
     },
 
