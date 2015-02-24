@@ -2,6 +2,7 @@ define([
   "underscore",
   "backbone",
   "providers/Provider",
+  "providers/aggregate/AggregateProvider",
   chrome.extension.getURL("/providers") + "/chrome/ChromeWrapper.js",
   chrome.extension.getURL("/providers") + "/chrome/bookmarks/BookmarksProvider.js",
   chrome.extension.getURL("/providers") + "/chrome/history/HistoryProvider.js",
@@ -11,6 +12,7 @@ define([
   _,
   Backbone,
   Provider,
+  AggregateProvider,
   ChromeWrapper,
   BookmarksProvider,
   HistoryProvider,
@@ -21,7 +23,15 @@ define([
   return Provider.extend({
 
     initialize: function() {
-      this._wrapper= new ChromeWrapper();
+      var wrapper= new ChromeWrapper();
+      this._chromeProviders= [
+          new BookmarksProvider({}, { wrapper: wrapper }),
+          new HistoryProvider(wrapper),
+          new TopSitesProvider(wrapper),
+          new DownloadsProvider(wrapper)
+      ];
+
+      this._aggregateProvider= new AggregateProvider().add(this._chromeProviders);
     },
 
     icon: function() {
@@ -33,15 +43,9 @@ define([
     },
 
     retrieve: function(filter) {
-      return $.Deferred()
-                .resolve(new Backbone.Collection([
-                    new BookmarksProvider({}, { wrapper: this._wrapper }),
-                    new HistoryProvider(this._wrapper),
-                    new TopSitesProvider(this._wrapper),
-                    new DownloadsProvider(this._wrapper)
-                  ].filter(function(provider) {
-                    return provider.get("label").toLowerCase().indexOf(filter.toLowerCase()) !== -1;
-                  })));
+      return filter ?
+                this._aggregateProvider.retrieve(filter) :
+                $.Deferred().resolve(new Backbone.Collection(this._chromeProviders));
     }
   });
 });
