@@ -30,6 +30,7 @@ require(
     "providers/Provider",
     "providers/matching/MatchingProvider",
     "QuickAction",
+    providersBaseUrl + "/google/GoogleAPIWrapper.js",
     providersBaseUrl + "/chrome/ChromeProvider.js",
     providersBaseUrl + "/ddg/DDGProvider.js",
     providersBaseUrl + "/mail/SharePageProvider.js",
@@ -42,6 +43,7 @@ require(
           Provider,
           MatchingProvider,
           QuickAction,
+          GoogleAPIWrapper,
           ChromeProvider,
           DDGProvider,
           SharePageProvider,
@@ -49,6 +51,9 @@ require(
           NYTimesProvider
 ) {
     $(function() {
+
+      var apiWrapper= new GoogleAPIWrapper();
+      apiWrapper.load();
 
       var body= $("body");
       var matchingProvider= new MatchingProvider();

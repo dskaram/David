@@ -15,6 +15,7 @@
     "bookmarks",
     "history",
     "topSites",
+    "identity",
     "downloads",
     "downloads.open"
   ],
@@ -23,6 +24,13 @@
     "providers/*",
     "css/*"
  ],
+ "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxVSZU2/L0KU//+ClmeuTpw4kZvRrgfYzzRmJBX95xnfoLGi2q89XEiKiDSe+xrjwflzNCpGM+94sLnhXWHRA2o64cfxx19HjVCRdv7sfl9WMm+CShTL904NvKCozMDJT+7vFFtpZ1muyVa/s0rHtVCYmWYxzy3mopt5HOtho2IHFT0aJhqsRvp48GTCNHE9f1enigWDbrTr2kdZUVnl/FOiSz4uoiJZEEDxjp1YRUaJXiLiK2t9ngeVQr6hdC1i4o8yYopoEF9cgb2szfFX3omezdMvfq9UlY4V9fb2DoLCmlqCAQTOj9cB1N1iYjf8v2jM9sCew7pXyF3/mytErpwIDAQAB",
+ "oauth2": {
+    "client_id": "351650823507-cplh77tatfeam3db2ugie8j1qtbsa6ht.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.compose"
+    ]
+  },
  "background": {
    "scripts": ["app-ep.js"],
    "persistent": false

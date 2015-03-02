@@ -81,3 +81,30 @@ chrome.runtime.onConnect.addListener(function(port) {
     }
   });
 });
+
+
+
+chrome.runtime.onConnect.addListener(function(port) {
+  if(port.name !== "identity-channel") {
+    return;
+  }
+
+  var handlers= {};
+
+  var AUTH_TOKEN_COMPOSE_MAIL= "auth-token-compose-mail";
+  handlers[AUTH_TOKEN_COMPOSE_MAIL]= function(req) {
+    chrome.identity.getAuthToken({
+        interactive: true,
+        scopes: ["https://www.googleapis.com/auth/gmail.compose"]
+      }, function(token) {
+        port.postMessage({
+          reqId: req.reqId,
+          token: token
+        });
+      });
+  };
+
+  port.onMessage.addListener(function(req) {
+    handlers[req.reqType](req);
+  });
+});
