@@ -6,7 +6,7 @@
     {
       "matches": ["<all_urls>"],
       "css": ["app-ep.css", "css/style.css"],
-      "js": ["js/lib/require.js", "require-cs.js", "app-cs.js"]
+      "js": ["scriptTagContext.js", "js/lib/require.js", "app-cs.js"]
     }
   ],
   "permissions": [
