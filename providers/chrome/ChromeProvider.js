@@ -2,6 +2,7 @@ define([
   "underscore",
   "backbone",
   "providers/Provider",
+  "providers/ProviderEntry",
   "providers/aggregate/AggregateProvider",
   chrome.extension.getURL("/providers") + "/chrome/ChromeWrapper.js",
   chrome.extension.getURL("/providers") + "/chrome/bookmarks/BookmarksProvider.js",
@@ -12,6 +13,7 @@ define([
   _,
   Backbone,
   Provider,
+  ProviderEntry,
   AggregateProvider,
   ChromeWrapper,
   BookmarksProvider,
@@ -19,6 +21,8 @@ define([
   TopSitesProvider,
   DownloadsProvider
 ) {
+
+  var DEFAULT_SEARCH= "//www.google.com/search?q=";
 
   return Provider.extend({
 
@@ -44,7 +48,12 @@ define([
 
     retrieve: function(filter) {
       return filter ?
-                this._aggregateProvider.retrieve(filter) :
+                this._aggregateProvider
+                        .defaultEntry(new ProviderEntry({
+                            label: "Search for \"" + filter + "\"",
+                            url: DEFAULT_SEARCH + filter
+                        }))
+                        .retrieve(filter) :
                 $.Deferred().resolve(new Backbone.Collection(this._chromeProviders));
     }
   });
