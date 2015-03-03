@@ -1,0 +1,21 @@
+Extensions
+   import.io
+   ReadingList
+   Todo / Tasks
+   Snooze webpages
+   Server based bookmarks
+   Nyt popular articles on empty string
+
+Design
+   add icons
+   color -- code pen
+
+Core
+   Show labels and URLs
+   open with "?" on selected text
+   all providers should return promises and not deferreds
+   waiting feedback
+   failure handling
+   success handling
+   empty sections
+   index check on _showElement
