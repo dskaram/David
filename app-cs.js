@@ -67,7 +67,7 @@ require(
         .provider(matchingProvider
                         .add(new DDGProvider())
                         .add(new FeedZillaCategoryProvider())
-                        .add(new SharePageProvider())
+                        .add(new SharePageProvider(apiWrapper))
                         .add(new NYTimesProvider())
                         .add(new ChromeProvider())
                   )
