@@ -31,6 +31,15 @@ define([
         reqType: AUTH_TOKEN_COMPOSE_MAIL
       });
 
+      result.done(function(token) {
+        if (token.token) {
+          gapi.auth.setToken({
+            access_token: token.token,
+            state: token.scope.join(" ")
+          });
+        }
+      });
+
       return result.promise();
     }
   };

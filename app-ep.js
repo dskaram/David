@@ -93,13 +93,17 @@ chrome.runtime.onConnect.addListener(function(port) {
 
   var AUTH_TOKEN_COMPOSE_MAIL= "auth-token-compose-mail";
   handlers[AUTH_TOKEN_COMPOSE_MAIL]= function(req) {
+    var scopes= ["https://www.googleapis.com/auth/gmail.compose"];
     chrome.identity.getAuthToken({
         interactive: true,
-        scopes: ["https://www.googleapis.com/auth/gmail.compose"]
+        scopes: scopes
       }, function(token) {
         port.postMessage({
           reqId: req.reqId,
-          token: token
+          token: {
+            token: token,
+            scope: scopes
+          }
         });
       });
   };

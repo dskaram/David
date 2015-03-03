@@ -26,15 +26,42 @@ define([
     return document.title || "This looks interesting!";
   }
 
+  var asRfc= function() {
+    var email = [];
+    email.push("From: \"David Karam\" <dskaram@gmail.com>");
+    email.push("To: dskaram@gmail.com");
+    email.push('Content-type: text/html;charset=iso-8859-1');
+    email.push('MIME-Version: 1.0');
+    email.push("Subject: " + subject());
+    email.push("");
+    email.push(body());
+
+    var base64EncodedEmail= btoa(email.join("\r\n").trim());
+    return base64EncodedEmail.replace(/\+/g, '-').replace(/\//g, '_');
+  }
+
   var SharePageEntry= ProviderEntry.extend({
 
     execute: function() {
+      var self= this;
       var gmailApi= $.Deferred();
       gapi.client.load('gmail', 'v1').then(gmailApi.resolve);
 
       $.when(identityManager.mail.compose(), gmailApi)
         .done(function(token) {
-          debugger
+          if (token) {
+            var requestEmail = gapi.client.gmail.users.messages.send({
+                userId: "me",
+                resource: {
+                    raw: asRfc()
+                }
+            });
+            requestEmail.then(function() {
+              // mail delivered - some useful user feedback here
+            });
+          } else {
+            ProviderEntry.prototype.execute.apply(self);
+          }
         });
     }
   });
