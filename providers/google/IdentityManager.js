@@ -44,5 +44,25 @@ define([
     }
   };
 
+  var AUTH_TOKEN_CONTACTS_SEARCH= "auth-token-contacts-search";
+  IdentityManager.prototype.contacts= {
+    search: function(searchTerm) {
+      var result= $.Deferred();
+      var requestId= _.uniqueId(AUTH_TOKEN_CONTACTS_SEARCH);
+      pendingRequests[requestId]= {
+        respKey: "token",
+        deferred: result
+      };
+
+      port.postMessage({
+        reqId: requestId,
+        searchTerm: searchTerm,
+        reqType: AUTH_TOKEN_CONTACTS_SEARCH
+      });
+
+      return result.promise();
+    }
+  };
+
   return IdentityManager;
 });

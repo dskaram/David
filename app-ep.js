@@ -108,6 +108,24 @@ chrome.runtime.onConnect.addListener(function(port) {
       });
   };
 
+  var AUTH_TOKEN_CONTACTS_SEARCH= "auth-token-contacts-search";
+  handlers[AUTH_TOKEN_CONTACTS_SEARCH]= function(req) {
+    var scopes= ["https://www.googleapis.com/auth/contacts.readonly"];
+    chrome.identity.getAuthToken({
+        interactive: true,
+        scopes: scopes
+      }, function(token) {
+        port.postMessage({
+          reqId: req.reqId,
+          token: {
+            token: token,
+            scope: scopes
+          }
+        });
+      });
+  };
+
+
   port.onMessage.addListener(function(req) {
     handlers[req.reqType](req);
   });

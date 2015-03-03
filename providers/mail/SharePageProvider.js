@@ -45,11 +45,12 @@ define([
     execute: function() {
       var self= this;
       var gmailApi= $.Deferred();
+      var target= this.get("target");
       gapi.client.load('gmail', 'v1').then(gmailApi.resolve);
 
       $.when(identityManager.mail.compose(), gmailApi)
-        .done(function(token) {
-          if (token) {
+        .done(function(tokenMail ,tokenContacts) {
+          if (tokenMail.token) {
             var requestEmail = gapi.client.gmail.users.messages.send({
                 userId: "me",
                 resource: {
@@ -79,6 +80,15 @@ define([
 
     retrieve: function(filter) {
       var target= this.adapter()(filter) || "";
+      var result= $.Deferred();
+
+      identityManager.contacts.search().done(function(tokenContacts) {
+        $.getJSON('https://www.google.com/m8/feeds/contacts/default/full/?access_token=' +
+        tokenContacts.token + "&v=3.0&alt=json&q=" + target + "&callback=?", function(result){
+            // contacts here
+        });
+      });
+
       return $.Deferred().resolve(new Backbone.Collection([
           new SharePageEntry({
             label: "Share this page" + (target ? " with " + target : ""),
