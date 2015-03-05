@@ -5,6 +5,7 @@ require.config({
     'underscore': 'lib/underscore',
     'backbone': 'lib/backbone',
     'doTCompiler': "lib/doTCompiler",
+    'moment':  chrome.extension.getURL("/extension-lib") + '/moment.min',
     'text':  'lib/text',
     'doT': 'lib/doT'
   },
@@ -33,7 +34,8 @@ require(
     providersBaseUrl + "/google/GoogleAPIWrapper.js",
     providersBaseUrl + "/chrome/ChromeProvider.js",
     providersBaseUrl + "/ddg/DDGProvider.js",
-    providersBaseUrl + "/mail/SharePageProvider.js",
+    providersBaseUrl + "/page/SharePageProvider.js",
+    providersBaseUrl + "/page/SnoozePageProvider.js",
     providersBaseUrl + "/feedzilla/FeedZillaCategoryProvider.js",
     providersBaseUrl + "/nytimes/NYTimesProvider.js"
   ],
@@ -47,6 +49,7 @@ require(
           ChromeProvider,
           DDGProvider,
           SharePageProvider,
+          SnoozePageProvider,
           FeedZillaCategoryProvider,
           NYTimesProvider
 ) {
@@ -68,6 +71,7 @@ require(
                         .add(new DDGProvider())
                         .add(new FeedZillaCategoryProvider())
                         .add(new SharePageProvider(apiWrapper))
+                        .add(new SnoozePageProvider(apiWrapper))
                         .add(new NYTimesProvider())
                         .add(new ChromeProvider())
                   )

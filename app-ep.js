@@ -66,6 +66,67 @@ chrome.runtime.onConnect.addListener(function(port) {
 });
 
 
+chrome.notifications.onButtonClicked.addListener(function(notificationId) {
+  chrome.alarms.create(notificationId, {
+    delayInMinutes: 1
+  });
+
+  chrome.notifications.clear(notificationId, function() {});
+});
+
+chrome.notifications.onClicked.addListener(function(notificationId) {
+    var snoozed= JSON.parse(notificationId);
+    chrome.tabs.create({
+      url: snoozed.url,
+      active: false
+    });
+
+    chrome.notifications.clear(notificationId, function() {});
+});
+
+
+chrome.alarms.onAlarm.addListener(function(alarm) {
+    var snoozed= JSON.parse(alarm.name);
+    chrome.notifications.create(alarm.name, {
+      type: "basic",
+      iconUrl: "notification.png",
+      title: "Time's up!",
+      message: snoozed.title,
+      contextMessage: snoozed.url,
+      isClickable: true,
+      buttons: [{ title: "Snooze" }]
+    }, function() {});
+});
+
+
+chrome.runtime.onConnect.addListener(function(port) {
+  if(port.name !== "alarms-channel") {
+    return;
+  }
+
+  var handlers= {};
+
+  var SNOOZE_WEBSITE= "snoozed-website";
+  handlers[SNOOZE_WEBSITE]= function(snoozed) {
+    delete snoozed.reqType;
+    chrome.alarms.create(JSON.stringify(snoozed), {
+      delayInMinutes: snoozed.delayInMinutes
+    });
+
+    setTimeout(function() {
+      chrome.tabs.query({ active: true,  currentWindow: true }, function(tabs) {
+        chrome.tabs.remove(tabs[0].id, function() {});
+      });
+    }, 2000);
+  };
+
+  port.onMessage.addListener(function(req) {
+    handlers[req.reqType](req);
+  });
+});
+
+
+
 
 chrome.runtime.onConnect.addListener(function(port) {
   if(port.name !== "commands-channel") {
