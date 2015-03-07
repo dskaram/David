@@ -132,6 +132,7 @@ define([
                 entries: entries.map(function(entry) {
                           return {
                             label: Matcher.highlight(entry.get("label"), adapter(filter)),
+                            imgUrl: entry.get("imgUrl"),
                             isProvider: entry.isProvider()
                           };
                         }),

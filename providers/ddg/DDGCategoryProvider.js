@@ -27,6 +27,7 @@ define([
                         _.map(this.topics, function(topic) {
                           return new ProviderEntry({
                             label: topic.Text,
+                            imgUrl: topic.Icon.URL,
                             url: topic.FirstURL
                           });
                         })

@@ -11,11 +11,13 @@ define([
 ) {
 
   var ACTIVATOR= "> ";
+  var PHOTO_REL= "http://schemas.google.com/contacts/2008/rel#photo";
+  var UNKNOWN_AVATAR=   chrome.extension.getURL("/providers/page") + "/unknown.png";
   var ADAPTER= function(filter) {
     return filter.substring(ACTIVATOR.length);
   };
 
-  var adaptContacts= function(entries, wrapper) {
+  var adaptContacts= function(entries, tokenContacts, wrapper) {
     return entries
           .filter(function(entry) {
             return entry.gd$name && entry.gd$email;
@@ -23,11 +25,14 @@ define([
           .map(function(entry) {
             var fullName= entry.gd$name.gd$fullName.$t;
             var email= entry.gd$email.filter(function(email) { return email.primary === "true" });
+            var imgLink= entry.link.filter(function(link) { return link.gd$etag && link.rel === PHOTO_REL; });
+            var imgUrl= imgLink.length > 0 ? imgLink[0].href + "&access_token=" +tokenContacts : UNKNOWN_AVATAR;
             email= (email.length > 0 ? email[0] : entry.gd$email[0]).address;
 
             return new SharePageEntry({
               to: email,
-              label: "Share with " + fullName + "(" + email + ")"
+              imgUrl: imgUrl,
+              label: "Share with " + fullName + " (" + email + ")"
             }, wrapper)
           });
   };
@@ -86,8 +91,8 @@ define([
       var wrapper= this._wrapper;
 
       wrapper.contacts.search(filter)
-      .done(function(results) {
-        result.resolve(new Backbone.Collection(adaptContacts(results, wrapper)));
+      .done(function(results, tokenContacts) {
+        result.resolve(new Backbone.Collection(adaptContacts(results, tokenContacts, wrapper)));
       });
 
       return result.promise();

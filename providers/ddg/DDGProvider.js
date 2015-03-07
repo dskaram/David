@@ -25,6 +25,7 @@ define([
     return _.map(results, function(result) {
       return new ProviderEntry({
         label: result.Text,
+        imgUrl: result.Icon.URL,
         url: result.FirstURL
       });
     });
@@ -70,11 +71,17 @@ define([
 
       $.get(ddgQuery,function(j) {},'json')
         .done(function(response) {
+          var first= new ProviderEntry({
+            label: response.Abstract || response.Heading,
+            url: response.AbstractURL,
+            imgUrl: response.Image
+          });
+
           response= response.RelatedTopics;
           var direct= directResults(response);
           var groups= groupedResults(response);
 
-          result.resolve(new Backbone.Collection(direct.concat(groups)));
+          result.resolve(new Backbone.Collection([first].concat(direct.concat(groups))));
         });
 
       return result;

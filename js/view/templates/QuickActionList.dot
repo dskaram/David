@@ -1,6 +1,7 @@
 {{~it.entries :value:index}}
-	<li class="quick-actions-listEntry{{? index == it.selection }} quick-actions-selected{{?}}">
-		{{= value.label }}
+	<li class="quick-actions-listEntry{{? index == it.selection }} quick-actions-selected{{?}} {{? value.imgUrl }} quick-actions-has-img{{?}}">
+		{{? value.imgUrl }}<img class="quick-actions-provider-img" src="{{= value.imgUrl }}" alt="User photo">{{?}}
+		<span class="quick-actions-provider-label">{{= value.label }}</span>
 		{{? value.isProvider }}<span class="quick-actions-provider-icon"></span>{{?}}
 	</li>
 {{~}}

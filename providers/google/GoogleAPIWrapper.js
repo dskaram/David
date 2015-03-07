@@ -64,7 +64,7 @@ define([
             .done(function(tokenContacts) {
               $.getJSON('https://www.google.com/m8/feeds/contacts/default/full/?access_token=' + tokenContacts.token + "&v=3.0&alt=json&q=" + searchTerm + "&callback=?")
                 .done(function(response){
-                    result.resolve(response.feed.entry);
+                    result.resolve(response.feed.entry, tokenContacts.token);
                 });
             });
 

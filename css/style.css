@@ -50,37 +50,57 @@
   transition: transform 0.3s ease-out;
 }
 
-.quick-actions-list-view .quick-actions-listEntries .quick-actions-listEntry {
+.quick-actions-listEntry {
   position: relative;
   cursor: pointer;
   width: 100%;
   padding: 10px;
 }
 
-.quick-actions-list-view .quick-actions-listEntries .quick-actions-listEntry.quick-actions-selected {
+.quick-actions-listEntry.quick-actions-has-img {
+    padding: 20px;
+}
+
+.quick-actions-listEntry * {
+    vertical-align: middle;
+}
+
+.quick-actions-listEntry.quick-actions-selected {
   background: #3b88c3;
   color: white;
   transition: opacity 0.2s ease-out;
 }
 
-.quick-actions-list-view .quick-actions-listEntries .quick-actions-listEntry.quick-actions-selected.quickactions-tap-effect {
+.quick-actions-listEntry.quick-actions-selected.quickactions-tap-effect {
   opacity: 0.8;
 }
 
-
-.quick-actions-list-view .quick-actions-listEntries .quick-actions-listEntry .quick-actions-matched {
+.quick-actions-listEntry .quick-actions-matched {
   font-weight: bold;
   text-decoration: underline;
 }
 
-.quick-actions-list-view .quick-actions-listEntries .quick-actions-listEntry .quick-actions-provider-icon {
+
+.quick-actions-listEntry.quick-actions-has-img .quick-actions-provider-label {
+    display: inline-block;
+    margin-left: 40px;
+}
+
+.quick-actions-listEntry .quick-actions-provider-img {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.quick-actions-listEntry .quick-actions-provider-icon {
   position: absolute;
   right: 10px;
   top: 10px;
 }
 
-.quick-actions-list-view .quick-actions-listEntries .quick-actions-listEntry .quick-actions-provider-icon,
-.quick-actions-list-view .quick-actions-listEntries .quick-actions-listEntry .quick-actions-provider-icon:before {
+.quick-actions-listEntry .quick-actions-provider-icon,
+.quick-actions-listEntry .quick-actions-provider-icon:before {
   width: 0;
   height: 0;
   border-top: 8px solid transparent;
@@ -89,7 +109,7 @@
   border-left: 8px solid #333;
 }
 
-.quick-actions-list-view .quick-actions-listEntries .quick-actions-listEntry .quick-actions-provider-icon:before {
+.quick-actions-listEntry .quick-actions-provider-icon:before {
     content: "";
     position: absolute;
     top: -8px;
@@ -97,11 +117,11 @@
     border-left-color: white;
 }
 
-.quick-actions-list-view .quick-actions-listEntries .quick-actions-listEntry.quick-actions-selected .quick-actions-provider-icon {
+.quick-actions-listEntry.quick-actions-selected .quick-actions-provider-icon {
   border-left-color: white;
 }
 
-.quick-actions-list-view .quick-actions-listEntries .quick-actions-listEntry.quick-actions-selected .quick-actions-provider-icon:before {
+.quick-actions-listEntry.quick-actions-selected .quick-actions-provider-icon:before {
   border-left-color: #3b88c3;
 }
 
