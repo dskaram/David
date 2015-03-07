@@ -60,6 +60,15 @@ chrome.runtime.onConnect.addListener(function(port) {
     chrome.downloads.open(req.downloadId);
   };
 
+  var TAB_OPEN= "open-providers-tab";
+  handlers[TAB_OPEN]= function(req) {
+    chrome.tabs.create({
+      url: req.url,
+      active: false
+    });
+  };
+
+
   port.onMessage.addListener(function(req) {
     handlers[req.reqType](req);
   });

@@ -121,5 +121,17 @@ define([
     }
   };
 
+  var TAB_OPEN= "open-providers-tab";
+  ChromeWrapper.prototype.tabs= {
+    open: function(url) {
+      port.postMessage({
+        reqType: TAB_OPEN,
+        url: url
+      });
+
+      return $.Deferred().resolve().promise();
+    }
+  };
+
   return ChromeWrapper;
 });

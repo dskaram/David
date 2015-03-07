@@ -29,10 +29,12 @@ require(
     "util/Property",
     "util/Keys",
     "providers/Provider",
+    "providers/ProviderEntry",
     "providers/matching/MatchingProvider",
     "QuickAction",
     providersBaseUrl + "/google/GoogleAPIWrapper.js",
     providersBaseUrl + "/chrome/ChromeProvider.js",
+    providersBaseUrl + "/chrome/ChromeWrapper.js",
     providersBaseUrl + "/ddg/DDGProvider.js",
     providersBaseUrl + "/page/SharePageProvider.js",
     providersBaseUrl + "/page/SnoozePageProvider.js",
@@ -43,10 +45,12 @@ require(
           Property,
           Keys,
           Provider,
+          ProviderEntry,
           MatchingProvider,
           QuickAction,
           GoogleAPIWrapper,
           ChromeProvider,
+          ChromeWrapper,
           DDGProvider,
           SharePageProvider,
           SnoozePageProvider,
@@ -57,6 +61,11 @@ require(
 
       var apiWrapper= new GoogleAPIWrapper();
       apiWrapper.load();
+
+      var chromeWrapper= new ChromeWrapper();
+      ProviderEntry.prototype.execute= function() {
+        return chromeWrapper.tabs.open(this.get("url"));
+      };
 
       var body= $("body");
       var matchingProvider= new MatchingProvider();
