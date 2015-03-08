@@ -2,12 +2,14 @@ define([
   "underscore",
   "backbone",
   "providers/Provider",
-	"providers/ProviderEntry"
+	"providers/ProviderEntry",
+  chrome.extension.getURL("/providers/importio") + "/ImportIOProvider.js",
 ], function(
   _,
   Backbone,
   Provider,
-	ProviderEntry
+	ProviderEntry,
+  ImportIOProvider
 ) {
 
   var ACTIVATOR= "nyt ";
@@ -15,12 +17,22 @@ define([
     return filter.substring(ACTIVATOR.length);
   };
 
-  var API_KEY= "9291baaa0739ee49a814e81549255348:13:65897916";
+  return ImportIOProvider.extend({
 
-  return Provider.extend({
+    feed: function() {
+      return "https://api.import.io/store/data/c71652fa-419f-4741-ac7b-ca5b9f2b7162/_query?input/webpage/url=http%3A%2F%2Fwww.nytimes.com%2F&_user=ff23be13-95ef-41f9-91c5-a19320a8ca52"
+    },
 
-    debounced: function() {
-      return true;
+    entries: function(response) {
+      return response.results
+                .filter(function(result) { return result.heading; })
+                .map(function(result) {
+                  return new ProviderEntry({
+                    label: result.heading,
+                    url: result.url.length ? result.url[0] : result.url,
+                    imgUrl: result.img
+                  });
+                });
     },
 
     adapter: function() {
@@ -33,34 +45,7 @@ define([
 
     icon: function() {
       return "providers/nytimes/nyt.png";
-    },
-
-    retrieve: _.memoize(function(filter) {
-      filter= ADAPTER(filter);
-      var result= $.Deferred();
-
-      var nytQuery= "//api.nytimes.com/svc/search/v2/articlesearch.json?&sort=newest&api-key=" + API_KEY;
-
-      if (filter) {
-        nytQuery+= "&q=" + filter;
-      }
-
-
-      $.get(nytQuery,function(j) {},'json')
-        .done(function(response) {
-          result.resolve(new Backbone.Collection(
-                              _.map(response.response.docs, function(result) {
-                                return new ProviderEntry({
-                                  label: result.headline.main,
-                                  url: result.web_url
-                                });
-                              })
-                            )
-                          );
-            });
-
-      return result;
-    })
+    }
 
   });
 });
