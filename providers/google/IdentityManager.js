@@ -8,10 +8,12 @@ define([
 
   var IdentityManager= function() {};
   var port = chrome.runtime.connect({ name: "identity-channel" });
-  port.onMessage.addListener(function(token) {
+  port.onMessage.addListener(function(identity) {
+    IdentityManager.session= identity;
+
     gapi.auth.setToken({
-      access_token: token.token,
-      state: token.scope.join(" ")
+      access_token: identity.token,
+      state: identity.scope.join(" ")
     });
   });
 

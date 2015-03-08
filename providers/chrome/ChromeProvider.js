@@ -5,6 +5,7 @@ define([
   "providers/ProviderEntry",
   "providers/aggregate/AggregateProvider",
   chrome.extension.getURL("/providers") + "/google/SearchProvider.js",
+  chrome.extension.getURL("/providers") + "/todo/NoteToSelfProvider.js",
   chrome.extension.getURL("/providers") + "/chrome/ChromeWrapper.js",
   chrome.extension.getURL("/providers") + "/chrome/bookmarks/BookmarksProvider.js",
   chrome.extension.getURL("/providers") + "/chrome/history/HistoryProvider.js",
@@ -17,6 +18,7 @@ define([
   ProviderEntry,
   AggregateProvider,
   SearchProvider,
+  NoteToSelfProvider,
   ChromeWrapper,
   BookmarksProvider,
   HistoryProvider,
@@ -26,16 +28,19 @@ define([
 
   return Provider.extend({
 
-    initialize: function() {
-      var wrapper= new ChromeWrapper();
+    initialize: function(apiWrapper) {
+      var chromeWrapper= new ChromeWrapper();
       this._chromeProviders= [
-          new BookmarksProvider({}, { wrapper: wrapper }),
-          new HistoryProvider(wrapper),
-          new TopSitesProvider(wrapper),
-          new DownloadsProvider(wrapper)
+          new BookmarksProvider({}, { wrapper: chromeWrapper }),
+          new HistoryProvider(chromeWrapper),
+          new TopSitesProvider(chromeWrapper),
+          new DownloadsProvider(chromeWrapper)
       ];
 
-      this._aggregateProvider= new AggregateProvider().add(this._chromeProviders);
+      this._aggregateProvider= new AggregateProvider()
+                                      .add(new SearchProvider())
+                                      .add(new NoteToSelfProvider({}, apiWrapper))
+                                      .add(this._chromeProviders);
     },
 
     icon: function() {
@@ -48,9 +53,7 @@ define([
 
     retrieve: function(filter) {
       return filter ?
-                this._aggregateProvider
-                        .defaultEntry(SearchProvider.entry(filter))
-                        .retrieve(filter) :
+                this._aggregateProvider.retrieve(filter) :
                 $.Deferred().resolve(new Backbone.Collection(this._chromeProviders));
     }
   });

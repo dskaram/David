@@ -191,13 +191,16 @@ chrome.runtime.onConnect.addListener(function(port) {
     return;
   }
 
-  port.onMessage.addListener(function() {
-    chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
-      port.postMessage({
-        token: token,
-        scope: ["https://www.googleapis.com/auth/gmail.compose",
-                "https://www.googleapis.com/auth/contacts.readonly",
-                "https://www.googleapis.com/auth/urlshortener"]
+  chrome.identity.getProfileUserInfo(function(info) {
+    port.onMessage.addListener(function() {
+      chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
+        port.postMessage({
+          token: token,
+          userEmail: info.email,
+          scope: ["https://www.googleapis.com/auth/gmail.compose",
+                  "https://www.googleapis.com/auth/contacts.readonly",
+                  "https://www.googleapis.com/auth/urlshortener"]
+        });
       });
     });
   });

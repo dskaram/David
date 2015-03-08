@@ -82,7 +82,7 @@ require(
                         .add(new SharePageProvider(apiWrapper))
                         .add(new SnoozePageProvider(apiWrapper))
                         .add(new NYTimesProvider())
-                        .add(new ChromeProvider())
+                        .add(new ChromeProvider(apiWrapper))
                   )
         .bind();
 
