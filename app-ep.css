@@ -6,7 +6,7 @@
   left: 50%;
   transform: translateX(-50%);
   box-sizing: border-box;
-  z-index: 20000;
+  z-index: 99999999999999;
   padding: 10px;
   background: #f5f5f5;
   border: 1px solid #cacaca;
@@ -27,7 +27,7 @@
   line-height: 75px;
   font-size: 30px;
   text-align: center;
-  z-index: 19999;
+  z-index: 99999999999998;
   color: #666;
   box-sizing: border-box;
   cursor: pointer;
