@@ -26,7 +26,7 @@ define([
                 .map(function(result) {
                   return new ProviderEntry({
                     label: result.heading,
-                    url: result.url.length ? result.url[0] : result.url,
+                    url: _.isArray(result.url) ? result.url[0] : result.url,
                     imgUrl: result.img
                   });
                 });
