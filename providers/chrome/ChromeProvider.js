@@ -22,7 +22,7 @@ define([
   DownloadsProvider
 ) {
 
-  var DEFAULT_SEARCH= "//www.google.com/search?q=";
+  var DEFAULT_SEARCH= "https://www.google.com/search?q=";
 
   return Provider.extend({
 
