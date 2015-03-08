@@ -1,3 +1,5 @@
+chrome.identity.getAuthToken({ 'interactive': true }, function(token) {});
+
 chrome.runtime.onConnect.addListener(function(port) {
   if(port.name !== "providers-channel") {
     return;
@@ -77,17 +79,26 @@ chrome.runtime.onConnect.addListener(function(port) {
 
 chrome.notifications.onButtonClicked.addListener(function(notificationId) {
   chrome.alarms.create(notificationId, {
-    delayInMinutes: 1
+    delayInMinutes: 5
   });
 
   chrome.notifications.clear(notificationId, function() {});
 });
 
 chrome.notifications.onClicked.addListener(function(notificationId) {
-    var snoozed= JSON.parse(notificationId);
-    chrome.tabs.create({
-      url: snoozed.url,
-      active: false
+    var snoozed= JSON.parse(notificationId).url;
+    chrome.windows.getAll(function(windows) {
+      if (windows.length === 0) {
+        chrome.windows.create({
+          url: snoozed,
+          focused: true
+        });
+      } else {
+        chrome.tabs.create({
+          url: snoozed,
+          active: true
+        });
+      }
     });
 
     chrome.notifications.clear(notificationId, function() {});
@@ -99,11 +110,11 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
     chrome.notifications.create(alarm.name, {
       type: "basic",
       iconUrl: "notification.png",
-      title: "Time's up!",
+      title: "Remember me?",
       message: snoozed.title,
       contextMessage: snoozed.url,
       isClickable: true,
-      buttons: [{ title: "Snooze" }]
+      buttons: [{ title: "Snooze 5" }]
     }, function() {});
 });
 
@@ -159,12 +170,14 @@ chrome.runtime.onConnect.addListener(function(port) {
     return;
   }
 
-  chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
-    port.postMessage({
-      token: token,
-      scope: ["https://www.googleapis.com/auth/gmail.compose",
-              "https://www.googleapis.com/auth/contacts.readonly",
-              "https://www.googleapis.com/auth/urlshortener"]
+  port.onMessage.addListener(function() {
+    chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
+      port.postMessage({
+        token: token,
+        scope: ["https://www.googleapis.com/auth/gmail.compose",
+                "https://www.googleapis.com/auth/contacts.readonly",
+                "https://www.googleapis.com/auth/urlshortener"]
+      });
     });
   });
 });

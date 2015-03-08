@@ -29,7 +29,7 @@ define([
 
   var snoozedSite= function(momentDelay) {
     var now= moment();
-    var delayInMinutes= momentDelay.diff(now) / MSECS_PER_MINUTE;
+    var delayInMinutes= Math.ceil(momentDelay.diff(now) / MSECS_PER_MINUTE);
 
     return {
       label: "Remind me " + momentDelay.fromNow(),
