@@ -1,12 +1,14 @@
 define([
   "underscore",
   "backbone",
+  chrome.extension.getURL("/providers") + "/google/SearchProvider.js",
   chrome.extension.getURL("/providers") + "/ddg/DDGCategoryProvider.js",
   "providers/Provider",
 	"providers/ProviderEntry"
 ], function(
   _,
   Backbone,
+  SearchProvider,
   DDGCategoryProvider,
   Provider,
 	ProviderEntry
@@ -60,11 +62,14 @@ define([
 
       $.get(ddgQuery,function(j) {},'json')
         .done(function(response) {
-          var first= new ProviderEntry({
-            label: response.Abstract || response.Heading,
-            url: response.AbstractURL,
-            imgUrl: response.Image
-          });
+          var answerLabel= response.Abstract || response.Heading;
+          var first= answerLabel ?
+                        new ProviderEntry({
+                          label: answerLabel,
+                          url: response.AbstractURL,
+                          imgUrl: response.Image
+                        }) :
+                        SearchProvider.entry(filter);
 
           response= response.RelatedTopics;
           var direct= directResults(response);

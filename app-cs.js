@@ -93,7 +93,8 @@ require(
       var port = chrome.runtime.connect({ name: "commands-channel" });
       var TOGGLE_REQ= "toggle-open";
       port.onMessage.addListener(function(req) {
-        search.set(DDGProvider.prototype.activator + req.selection);
+        var selection= req.selection || window.getSelection().toString();
+        search.set(selection ? DDGProvider.prototype.activator + selection : selection);
         open.set(!open.get());
       });
 
