@@ -61,7 +61,7 @@
     padding: 20px;
 }
 
-.quick-actions-listEntry * {
+.quick-actions-listEntry > * {
     vertical-align: middle;
 }
 
@@ -96,7 +96,7 @@
 .quick-actions-listEntry .quick-actions-provider-icon {
   position: absolute;
   right: 10px;
-  top: 10px;
+  top: 15px;
 }
 
 .quick-actions-listEntry .quick-actions-provider-icon,
