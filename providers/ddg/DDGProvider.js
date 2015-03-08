@@ -67,7 +67,7 @@ define([
         return result.resolve(new Backbone.Collection());
       }
 
-      var ddgQuery= "//api.duckduckgo.com/?q=" + filter + "&format=json";
+      var ddgQuery= "https://api.duckduckgo.com/?q=" + filter + "&format=json";
 
       $.get(ddgQuery,function(j) {},'json')
         .done(function(response) {
