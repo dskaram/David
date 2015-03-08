@@ -33,7 +33,7 @@ require(
     "providers/matching/MatchingProvider",
     "QuickAction",
     providersBaseUrl + "/google/GoogleAPIWrapper.js",
-    providersBaseUrl + "/chrome/ChromeProvider.js",
+    providersBaseUrl + "/DefaultExtensionProvider.js",
     providersBaseUrl + "/chrome/ChromeWrapper.js",
     providersBaseUrl + "/ddg/DDGProvider.js",
     providersBaseUrl + "/page/SharePageProvider.js",
@@ -48,7 +48,7 @@ require(
           MatchingProvider,
           QuickAction,
           GoogleAPIWrapper,
-          ChromeProvider,
+          DefaultExtensionProvider,
           ChromeWrapper,
           DDGProvider,
           SharePageProvider,
@@ -82,7 +82,7 @@ require(
                         .add(new SharePageProvider(apiWrapper))
                         .add(new SnoozePageProvider(apiWrapper))
                         .add(new NYTimesProvider())
-                        .add(new ChromeProvider(apiWrapper))
+                        .add(new DefaultExtensionProvider(apiWrapper))
                   )
         .bind();
 
