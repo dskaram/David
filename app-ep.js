@@ -159,44 +159,12 @@ chrome.runtime.onConnect.addListener(function(port) {
     return;
   }
 
-  var handlers= {};
-
-  var AUTH_TOKEN_COMPOSE_MAIL= "auth-token-compose-mail";
-  handlers[AUTH_TOKEN_COMPOSE_MAIL]= function(req) {
-    var scopes= ["https://www.googleapis.com/auth/gmail.compose"];
-    chrome.identity.getAuthToken({
-        interactive: true,
-        scopes: scopes
-      }, function(token) {
-        port.postMessage({
-          reqId: req.reqId,
-          token: {
-            token: token,
-            scope: scopes
-          }
-        });
-      });
-  };
-
-  var AUTH_TOKEN_CONTACTS_SEARCH= "auth-token-contacts-search";
-  handlers[AUTH_TOKEN_CONTACTS_SEARCH]= function(req) {
-    var scopes= ["https://www.googleapis.com/auth/contacts.readonly"];
-    chrome.identity.getAuthToken({
-        interactive: true,
-        scopes: scopes
-      }, function(token) {
-        port.postMessage({
-          reqId: req.reqId,
-          token: {
-            token: token,
-            scope: scopes
-          }
-        });
-      });
-  };
-
-
-  port.onMessage.addListener(function(req) {
-    handlers[req.reqType](req);
+  chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
+    port.postMessage({
+      token: token,
+      scope: ["https://www.googleapis.com/auth/gmail.compose",
+              "https://www.googleapis.com/auth/contacts.readonly",
+              "https://www.googleapis.com/auth/urlshortener"]
+    });
   });
 });

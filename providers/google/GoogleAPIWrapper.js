@@ -13,7 +13,6 @@ define([
 
     var asRfc= function(to, subject, body) {
       var email = [];
-      email.push("From: \"David Karam\" <dskaram@gmail.com>");
       email.push("To: " + to);
       email.push('Content-type: text/html;charset=iso-8859-1');
       email.push('MIME-Version: 1.0');
@@ -27,6 +26,7 @@ define([
 
     gapiloaded= function() {
       gapi.client.setApiKey('AIzaSyCy2e9oyRTMHqLZPyDwGosdJa65mAK2Cnk');
+      identityManager.load();
     };
 
     _.extend(ApiWrapper.prototype, {
@@ -59,13 +59,11 @@ define([
       contacts: {
         search: function(searchTerm) {
           var result= $.Deferred();
+          var token= gapi.auth.getToken().access_token;
 
-          identityManager.contacts.search()
-            .done(function(tokenContacts) {
-              $.getJSON('https://www.google.com/m8/feeds/contacts/default/full/?access_token=' + tokenContacts.token + "&v=3.0&alt=json&q=" + searchTerm + "&callback=?")
-                .done(function(response){
-                    result.resolve(response.feed.entry, tokenContacts.token);
-                });
+          $.getJSON('https://www.google.com/m8/feeds/contacts/default/full/?access_token=' + token + "&v=3.0&alt=json&q=" + searchTerm + "&callback=?")
+            .done(function(response){
+                result.resolve(response.feed.entry, token);
             });
 
           return result.promise();
@@ -76,26 +74,15 @@ define([
         send: function(to, subject, body) {
           var result= $.Deferred();
 
-          var gmailApi= $.Deferred();
-          gapi.client.load('gmail', 'v1').then(gmailApi.resolve);
-
-          $.when(identityManager.mail.compose(), gmailApi)
-            .done(function(tokenMail) {
-              if (tokenMail.token) {
-                var requestEmail = gapi.client.gmail.users.messages.send({
+          gapi.client.load('gmail', 'v1')
+            .then(function() {
+                gapi.client.gmail.users.messages.send({
                     userId: "me",
                     resource: {
                         raw: asRfc(to, subject, body)
                     }
-                });
-                requestEmail.then(function() {
-                  result.resolve();
-                });
-              } else {
-                result.reject("Did not receive mail token");
-              }
-            })
-            .fail(result.reject);
+                }).then(result.resolve, result.reject);
+            }, result.reject);
 
           return result.promise();
         }
