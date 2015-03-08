@@ -34,6 +34,7 @@ define([
 		initialize: function(viewModel, layers, view) {
 			this._bindViewEvents(viewModel, layers, view);
 			this._baseUrl= "/";
+			this._layers= layers;
 			this._open= new Property(viewModel.get("open"));
 			this._viewModel= viewModel;
 
@@ -96,6 +97,11 @@ define([
 			return this;
 		},
 
+		search: function(search) {
+			this._search= search;
+			return this;
+		},
+
 		open: function(open) {
 			this._open= open;
 			return this;
@@ -110,6 +116,13 @@ define([
 			if (this._providers.length === 0) throw new Error("Cannot bind without a default provider.");
 
 			Bindings.bind(this._open, this._viewModel, "open");
+
+			if (this._search) {
+				var self= this;
+				this._search.changed(function(value) {
+					self._layers.active().set("searchTerm", value);
+				});
+			}
 		},
 
 		_bindViewEvents: function(viewModel, layers, view) {

@@ -38,7 +38,6 @@ require(
     providersBaseUrl + "/ddg/DDGProvider.js",
     providersBaseUrl + "/page/SharePageProvider.js",
     providersBaseUrl + "/page/SnoozePageProvider.js",
-    providersBaseUrl + "/feedzilla/FeedZillaCategoryProvider.js",
     providersBaseUrl + "/nytimes/NYTimesProvider.js"
   ],
   function($, _, B,
@@ -54,7 +53,6 @@ require(
           DDGProvider,
           SharePageProvider,
           SnoozePageProvider,
-          FeedZillaCategoryProvider,
           NYTimesProvider
 ) {
     $(function() {
@@ -71,14 +69,16 @@ require(
       var matchingProvider= new MatchingProvider();
       var quickActionsPlaceholder= $("<div id='quick-actions-placeholder'></div>");
       var quickActionsMarker= $("<div id='quickactions-marker'>↓</div>");
-      open= new Property(false);
+      var open= new Property(false);
+      var search= new Property("");
+
       QuickAction
         .create(quickActionsPlaceholder)
         .baseUrl(chrome.extension.getURL(""))
+        .search(search)
         .open(open)
         .provider(matchingProvider
                         .add(new DDGProvider())
-                        .add(new FeedZillaCategoryProvider())
                         .add(new SharePageProvider(apiWrapper))
                         .add(new SnoozePageProvider(apiWrapper))
                         .add(new NYTimesProvider())
@@ -93,15 +93,14 @@ require(
       var port = chrome.runtime.connect({ name: "commands-channel" });
       var TOGGLE_REQ= "toggle-open";
       port.onMessage.addListener(function(req) {
+        search.set(DDGProvider.prototype.activator + req.selection);
         open.set(!open.get());
       });
 
       body.keyup(function(e) {
-          if (e.ctrlKey && e.which === Keys.SPACE) {
+          if (e.which === Keys.ESCAPE) {
             Keys.stopEvent(e);
-            open.set(!open.get());
-          } else if (e.which === Keys.ESCAPE) {
-            Keys.stopEvent(e);
+            search.set("");
             open.set(false);
           }
       });

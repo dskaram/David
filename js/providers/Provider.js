@@ -11,20 +11,22 @@ define([
 ) {
 	var Provider= ProviderEntry.extend({
 
+		activator: "",
+
 		isProvider: function() {
 			return true;
-		},
-
-		adapter: function() {
-			return _.identity;
 		},
 
 		debounced: function() {
 			return false;
 		},
 
+		adapter: function() {
+			return _.bind(function(filter) { return filter.substring(this.activator.length) }, this);
+		},
+
 		accepts: function(filter) {
-			throw new Error("Must override accepts");
+			return filter.indexOf(this.activator) === 0;
 		},
 
 		icon: function() {

@@ -15,11 +15,7 @@ define([
 ) {
 
   var wrapper= new AlarmsWrapper();
-  var ACTIVATOR= "zz";
   var MSECS_PER_MINUTE= 1000 * 60;
-  var ADAPTER= function(filter) {
-    return filter.substring(ACTIVATOR.length);
-  };
 
   var SnoozePageEntry= ProviderEntry.extend({
     execute: function() {
@@ -41,13 +37,7 @@ define([
 
   return Provider.extend({
 
-    adapter: function() {
-      return ADAPTER;
-    },
-
-    accepts: function(filter) {
-      return filter.indexOf(ACTIVATOR) === 0;
-    },
+    activator: "zz ",
 
     retrieve: function(filter) {
       var test= moment().add(1, "minutes");

@@ -1,7 +1,7 @@
 {
-  "name": "QuickActions Chrome",
+  "name": "David",
   "version": "0.0.1",
-  "description": "Puts the internet at your fingertips",
+  "description": "Your friendly next-door neighbor. Ask David to help out whenever you need some help while browsing the great wide Web!",
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
@@ -13,6 +13,7 @@
     "http://*/",
     "https://*/",
     "tabs",
+    "contextMenus",
     "bookmarks",
     "history",
     "topSites",
@@ -44,10 +45,10 @@
   "commands": {
         "toggle-open": {
           "suggested_key": {
-            "default": "Ctrl+M",
-            "mac": "Command+M"
+            "default": "Ctrl+Space",
+            "mac": "Command+Space"
           },
-          "description": "Toggle QuickActions"
+          "description": "Summon David"
         }
   },
   "manifest_version": 2

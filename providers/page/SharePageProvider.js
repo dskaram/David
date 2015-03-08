@@ -10,12 +10,8 @@ define([
   ProviderEntry
 ) {
 
-  var ACTIVATOR= "> ";
   var PHOTO_REL= "http://schemas.google.com/contacts/2008/rel#photo";
   var UNKNOWN_AVATAR=   chrome.extension.getURL("/providers/page") + "/unknown.png";
-  var ADAPTER= function(filter) {
-    return filter.substring(ACTIVATOR.length);
-  };
 
   var adaptContacts= function(entries, tokenContacts, wrapper) {
     return entries
@@ -71,18 +67,12 @@ define([
 
   return Provider.extend({
 
+    activator: "> ",
+
     initialize: function(wrapper) {
       Provider.prototype.initialize.apply(this, arguments);
 
       this._wrapper= wrapper;
-    },
-
-    adapter: function() {
-      return ADAPTER;
-    },
-
-    accepts: function(filter) {
-      return filter.indexOf(ACTIVATOR) === 0;
     },
 
     retrieve: function(filter) {
