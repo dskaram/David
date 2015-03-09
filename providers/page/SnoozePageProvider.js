@@ -25,12 +25,12 @@ define([
     }
   });
 
-  var snoozedSite= function(momentDelay) {
+  var snoozedSite= function(momentDelay, label) {
     var now= moment();
     var delayInMinutes= Math.ceil(momentDelay.diff(now) / MSECS_PER_MINUTE);
 
     return {
-      label: "Remind me " + momentDelay.fromNow(),
+      label: "Remind me " + label,
       title: document.title,
       url: document.URL,
       delayInMinutes: delayInMinutes
@@ -50,11 +50,11 @@ define([
       var tomorrow= moment().add(1, "day");
 
       var snoozeOptions= [
-        new SnoozePageEntry(snoozedSite(test)),
-        new SnoozePageEntry(snoozedSite(twoHours)),
-        new SnoozePageEntry(snoozedSite(fourHours)),
-        new SnoozePageEntry(snoozedSite(tonight)),
-        new SnoozePageEntry(snoozedSite(saturday))
+        new SnoozePageEntry(snoozedSite(test, "in a minute (testing)")),
+        new SnoozePageEntry(snoozedSite(twoHours, "in a couple of hours")),
+        new SnoozePageEntry(snoozedSite(fourHours, "in four hours")),
+        new SnoozePageEntry(snoozedSite(tonight, "tonight")),
+        new SnoozePageEntry(snoozedSite(saturday, "on the weekend"))
       ];
 
       return $.Deferred().resolve(new Backbone.Collection(snoozeOptions)).promise();
