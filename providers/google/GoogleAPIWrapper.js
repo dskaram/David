@@ -20,7 +20,7 @@ define([
       email.push("");
       email.push(body);
 
-      var base64EncodedEmail= btoa(email.join("\r\n").trim());
+      var base64EncodedEmail= btoa(unescape(encodeURIComponent(email.join("\r\n").trim())));
       return base64EncodedEmail.replace(/\+/g, '-').replace(/\//g, '_');
     }
 
