@@ -126,6 +126,7 @@ define([
         });
 
         layer.on("change:selection", function(model, index) {
+          model.set("executing", Execution.NONE); // until we have a view model for the entries
           var entries= layerContainer.find(".quick-actions-listEntry");
           var selectedElement= entries.eq(index);
 
