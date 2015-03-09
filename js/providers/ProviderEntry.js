@@ -1,6 +1,8 @@
 define([
+	"jquery",
 	"backbone"
 ], function(
+	$,
 	Backbone
 ) {
 
@@ -27,6 +29,7 @@ define([
 			}
 
 			openNewBackgroundTab(url);
+			return $.Deferred().resolve().promise();
 		}
 
   });

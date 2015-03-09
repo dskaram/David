@@ -1,4 +1,5 @@
 define([
+  "jquery",
   "underscore",
   "backbone",
   "moment",
@@ -6,6 +7,7 @@ define([
   "providers/ProviderEntry",
   chrome.extension.getURL("/providers") + "/google/AlarmsWrapper.js",
 ], function(
+  $,
   _,
   Backbone,
   moment,
@@ -19,7 +21,7 @@ define([
 
   var SnoozePageEntry= ProviderEntry.extend({
     execute: function() {
-      wrapper.alarms.snooze(this.attributes);
+      return wrapper.alarms.snooze(this.attributes);
     }
   });
 

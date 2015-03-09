@@ -3,5 +3,6 @@
 		{{? value.imgUrl }}<img class="quick-actions-provider-img" src="{{= value.imgUrl }}" alt="User photo">{{?}}
 		<span class="quick-actions-provider-label">{{= value.label }}</span>
 		{{? value.isProvider }}<span class="quick-actions-provider-icon"></span>{{?}}
+		<span class="quick-actions-status-icon"></span>
 	</li>
 {{~}}

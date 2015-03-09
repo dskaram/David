@@ -93,10 +93,33 @@
     border-radius: 50%;
 }
 
+.quick-actions-listEntry .quick-actions-status-icon,
 .quick-actions-listEntry .quick-actions-provider-icon {
   position: absolute;
   right: 10px;
   top: 15px;
+}
+
+.quick-actions-listEntry .quick-actions-status-icon {
+  display: none;
+}
+
+.quick-actions-execution-done .quick-actions-status-icon,
+.quick-actions-execution-active .quick-actions-status-icon,
+.quick-actions-execution-failed .quick-actions-status-icon {
+  display: block;
+}
+
+.quick-actions-execution-active .quick-actions-status-icon:before {
+  content: "...";
+}
+
+.quick-actions-execution-done .quick-actions-status-icon:before {
+  content: "✓";
+}
+
+.quick-actions-execution-failed .quick-actions-status-icon:before {
+  content: "✗";
 }
 
 .quick-actions-listEntry .quick-actions-provider-icon,

@@ -5,7 +5,8 @@ define([
 	"util/ListBindings",
 	"util/Property",
   "view/QuickActionView",
-  "view/Selection",
+	"view/Selection",
+	"view/Execution",
   "view/Navigation"
 ], function(
 	$,
@@ -15,6 +16,7 @@ define([
 	Property,
 	QuickActionView,
 	Selection,
+	Execution,
 	Navigation
 ) {
 
@@ -23,6 +25,7 @@ define([
 		defaults: {
 			entries: new Backbone.Collection(),
 			selection: 0,
+			executing: Execution.NONE,
 			searchTerm: "",
 			providerIcon: "",
 			searchAdapter: _.identity
@@ -51,9 +54,9 @@ define([
 
 					provider
 							.retrieve(searchTerm)
-							.done(_.bind(function(entries) {
+							.done(function(entries) {
 								layer.set("entries", entries);
-							}, this));
+							});
 				}, USER_TYPED_INTERVAL));
 
 				layer.on("change:entries", function(model, entries) {
@@ -134,13 +137,13 @@ define([
 				switch(selection) {
 			        case Selection.DOWN:
 			        	layers.active().set("selection", currentSelection === numEntries - 1 ? 0 : currentSelection + 1);
-						break;
+								break;
 			        case Selection.UP:
 			         	layers.active().set("selection", currentSelection === 0 ? numEntries - 1 : currentSelection - 1);
-              			break;
-					default:
+              	break;
+							default:
 			         	layers.active().set("selection", typeof selection === "number" ? selection : 0);
-              	}
+        	}
 
 			}, this));
 
@@ -154,7 +157,13 @@ define([
 			         	if (entry.isProvider()) {
 				         	this._providers.add(entry);
 			         	} else {
-									entry.execute();
+									var execution= entry.execute()
+																				.done(function() { layers.active().set("executing", Execution.DONE) })
+																				.fail(function() { layers.active().set("executing", Execution.FAIL) });
+
+									if (execution.state() === "pending") {
+										layers.active().set("executing", Execution.ACTIVE);
+									}
 								}
           			break;
 			         case Navigation.ROLLBACK:

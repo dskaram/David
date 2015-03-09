@@ -18,7 +18,7 @@ define([
     },
 
     execute: function() {
-      this._wrapper.downloads.open(this.get("id"));
+      return this._wrapper.downloads.open(this.get("id"));
     }
   });
 

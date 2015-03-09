@@ -5,6 +5,7 @@ define([
   "util/Keys",
   "view/Matcher",
   "view/Selection",
+  "view/Execution",
   "view/Navigation",
   "doT!view/templates/QuickActionView",
   "doT!view/templates/QuickActionList",
@@ -16,6 +17,7 @@ define([
     Keys,
     Matcher,
     Selection,
+    Execution,
     Navigation,
     QuickActionViewTemplate,
     QuickActionListTemplate,
@@ -103,6 +105,15 @@ define([
 
         layer.on("change:searchTerm", function(model, searchTerm) {
           self.inputBox.val(searchTerm);
+        });
+
+        layer.on("change:executing", function(model, executing) {
+          var index= model.get("selection");
+          var entry= layerContainer.find(".quick-actions-listEntry").eq(index);
+
+          entry.toggleClass("quick-actions-execution-active", executing === Execution.ACTIVE);
+          entry.toggleClass("quick-actions-execution-done", executing === Execution.DONE);
+          entry.toggleClass("quick-actions-execution-failed", executing === Execution.FAILED);
         });
 
         layer.on("change:providerIcon", function(model, providerIcon) {

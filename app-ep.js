@@ -139,9 +139,13 @@ chrome.runtime.onConnect.addListener(function(port) {
 
   var SNOOZE_WEBSITE= "snoozed-website";
   handlers[SNOOZE_WEBSITE]= function(snoozed) {
-    delete snoozed.reqType;
     chrome.alarms.create(JSON.stringify(snoozed), {
       delayInMinutes: snoozed.delayInMinutes
+    });
+
+    port.postMessage({
+      reqId: snoozed.reqId,
+      alarm: true
     });
 
     setTimeout(function() {

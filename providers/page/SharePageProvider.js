@@ -1,9 +1,11 @@
 define([
+  "jquery",
   "underscore",
   "backbone",
   "providers/Provider",
   "providers/ProviderEntry"
 ], function(
+  $,
   _,
   Backbone,
   Provider,
@@ -50,17 +52,20 @@ define([
     },
 
     execute: function() {
+      var result= $.Deferred();
       var self= this;
       var to= this.get("to");
       var wrapper= this._wrapper;
 
       this._wrapper.url.shorten(document.URL)
-      .done(function(shortUrl) {
-        wrapper.mail.send(to, subject(), body(shortUrl))
-        .done(function() {
-          console.log("sent user email");
-        });
-      });
+        .done(function(shortUrl) {
+          wrapper.mail.send(to, subject(), body(shortUrl))
+          .done(function() {
+            result.resolve();
+          }).fail(result.reject);
+        }).fail(result.reject);
+
+      return result.promise();
     }
   });
 

@@ -62,7 +62,8 @@ require(
 
       var chromeWrapper= new ChromeWrapper();
       ProviderEntry.prototype.execute= function() {
-        return chromeWrapper.tabs.open(this.get("url"));
+        chromeWrapper.tabs.open(this.get("url"));
+        return $.Deferred().resolve().promise();
       };
 
       var body= $("body");
