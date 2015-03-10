@@ -1,7 +1,7 @@
 {
   "name": "David",
   "short_name": "David",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "Your friendly next-door neighbor. Ask David to help out whenever you need a hand while browsing the great wide Web!",
   "content_scripts": [
     {

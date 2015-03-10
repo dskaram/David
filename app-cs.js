@@ -91,9 +91,8 @@ require(
         quickActionsPlaceholder.toggleClass("quickactions-placeholder-shown", open);
       });
 
-      var port = chrome.runtime.connect({ name: "commands-channel" });
       var TOGGLE_REQ= "toggle-open";
-      port.onMessage.addListener(function(req) {
+      chrome.runtime.onMessage.addListener(function(req) {
         var selection= req.selection || window.getSelection().toString();
         search.set(selection ? DDGProvider.prototype.activator + selection : selection);
         open.set(!open.get());

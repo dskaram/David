@@ -1,12 +1,30 @@
-var ASK_DAVID= "ASK_DAVID_CONTEXT_MENU";
-
 chrome.runtime.onInstalled.addListener(function() {
   chrome.identity.getAuthToken({ 'interactive': true }, function(token) {});
+
+  var TOGGLE_REQ= "toggle-open";
+  var ASK_DAVID= "ASK_DAVID_CONTEXT_MENU";
+  var delegateCommand= function (selectionText) {
+    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, { selection: selectionText || "" }, function() {});
+    });
+  }
 
   chrome.contextMenus.create({
     id: ASK_DAVID,
     title: "Ask David about '%s'",
     contexts: ["selection"]
+  });
+
+  chrome.commands.onCommand.addListener(function(command) {
+    if (command === TOGGLE_REQ) {
+      delegateCommand();
+    }
+  });
+
+  chrome.contextMenus.onClicked.addListener(function(info, tab) {
+    if (info.menuItemId === ASK_DAVID) {
+        delegateCommand(info.selectionText);
+    }
   });
 });
 
@@ -157,34 +175,6 @@ chrome.runtime.onConnect.addListener(function(port) {
 
   port.onMessage.addListener(function(req) {
     handlers[req.reqType](req);
-  });
-});
-
-
-
-
-chrome.runtime.onConnect.addListener(function(port) {
-  if(port.name !== "commands-channel") {
-    return;
-  }
-
-  var TOGGLE_REQ= "toggle-open";
-  chrome.commands.onCommand.addListener(function(command) {
-    if (command === TOGGLE_REQ) {
-      port.postMessage({
-        reqType: TOGGLE_REQ,
-        selection: ""
-      });
-    }
-  });
-
-  chrome.contextMenus.onClicked.addListener(function(info, tab) {
-    if (info.menuItemId === ASK_DAVID) {
-      port.postMessage({
-        reqType: TOGGLE_REQ,
-        selection: info.selectionText
-      });
-    }
   });
 });
 
