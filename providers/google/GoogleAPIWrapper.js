@@ -22,7 +22,7 @@ define([
 
       var base64EncodedEmail= btoa(unescape(encodeURIComponent(email.join("\r\n").trim())));
       return base64EncodedEmail.replace(/\+/g, '-').replace(/\//g, '_');
-    }
+    };
 
     gapiloaded= function() {
       gapi.client.setApiKey('AIzaSyCy2e9oyRTMHqLZPyDwGosdJa65mAK2Cnk');
@@ -82,6 +82,30 @@ define([
                         raw: asRfc(to, subject, body)
                     }
                 }).then(result.resolve, result.reject);
+            }, result.reject);
+
+          return result.promise();
+        },
+
+        unread: function() {
+          var result= $.Deferred();
+
+          gapi.client.load('gmail', 'v1')
+            .then(function() {
+                gapi.client.gmail.users.messages.list({
+                    userId: "me",
+                    maxResults: 10,
+                    labelIds: "INBOX",
+                    q: "is:unread"
+                }).then(function(list) {
+                  var batch = gapi.client.newBatch();
+                  var ids= list.result.messages.map(function(r) { return r.id; });
+                  ids.forEach(function(id) {
+                    batch.add(gapi.client.gmail.users.messages.get({ userId: "me", id: id, format: "metadata" }));
+                  });
+
+                  batch.then(result.resolve, result.reject);
+                }, result.reject);
             }, result.reject);
 
           return result.promise();

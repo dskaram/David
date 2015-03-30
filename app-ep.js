@@ -192,6 +192,7 @@ chrome.runtime.onConnect.addListener(function(port) {
           token: token,
           userEmail: info.email,
           scope: ["https://www.googleapis.com/auth/gmail.compose",
+                  "https://www.googleapis.com/auth/gmail.readonly",
                   "https://www.googleapis.com/auth/contacts.readonly",
                   "https://www.googleapis.com/auth/urlshortener"]
         });

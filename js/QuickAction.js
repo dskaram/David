@@ -39,6 +39,7 @@ define([
 			this._baseUrl= "/";
 			this._layers= layers;
 			this._open= new Property(viewModel.get("open"));
+			this._open.invoked= false;
 			this._viewModel= viewModel;
 
 			var self= this;
@@ -89,7 +90,6 @@ define([
 
 			var updateResults= function(model) {
 				var filter= layers.active().get("searchTerm");
-				layers.active().trigger("change:searchTerm", layers.active(), filter);	// term didn't change, but we still want to update
 			};
 			providers.on("add", updateResults);
 			providers.on("remove", updateResults);
@@ -119,6 +119,14 @@ define([
 			if (this._providers.length === 0) throw new Error("Cannot bind without a default provider.");
 
 			Bindings.bind(this._open, this._viewModel, "open");
+			this._open.changed(_.bind(function() {
+				if (!this._open.invoked) {
+					var filter= this._layers.active().get("searchTerm");
+					this._layers.active().trigger("change:searchTerm", this._layers.active(), filter);  // term didn't change, but we still want to update
+				}
+
+				this._open.invoked= true;
+			}, this));
 
 			if (this._search) {
 				var self= this;
@@ -158,8 +166,8 @@ define([
 				         	this._providers.add(entry);
 			         	} else {
 									var execution= entry.execute()
-																				.done(function() { layers.active().set("executing", Execution.DONE) })
-																				.fail(function() { layers.active().set("executing", Execution.FAIL) });
+																				.done(function() { layers.active().set("executing", Execution.DONE); })
+																				.fail(function() { layers.active().set("executing", Execution.FAIL); });
 
 									if (execution.state() === "pending") {
 										layers.active().set("executing", Execution.ACTIVE);
@@ -167,7 +175,7 @@ define([
 								}
           			break;
 			         case Navigation.ROLLBACK:
-			         	direction= 1;
+			         	direction= 1;	// jshint ignore: line
 					default:
 			         	while (direction > 0 && this._providers.length > 1) {
 				         	this._providers.remove(this._providers.last());
